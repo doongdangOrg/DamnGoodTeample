@@ -1,9 +1,6 @@
 package com.biscsh.dgt.domain.member.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -11,7 +8,8 @@ import jakarta.validation.constraints.Size;
 public class Member {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long memberId;
+	@Column(name = "member_id")
+	private Long id;
 
 	@Size(min = 13, max = 13)
 	@NotNull
