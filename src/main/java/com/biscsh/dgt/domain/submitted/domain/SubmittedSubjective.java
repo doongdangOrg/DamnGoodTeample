@@ -1,0 +1,28 @@
+package com.biscsh.dgt.domain.submitted.domain;
+
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+// FIXME: JPA에서 단일 PK없이 처리하려면 다른 방식 취해야함
+//@Entity
+@Table(name = "submitted_multiple")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+@EqualsAndHashCode(of = {"memberId", "multipleChoiceId","questionId"})
+//@ToString(of = {"score"})
+public class SubmittedSubjective {
+
+    @NotNull
+    private Long memberId;
+
+    @NotNull
+    private Long questionId;
+
+    @Size(max = 4000, message = "4000글자 내로 작성돼야 합니다.")
+    private String answer;
+}
