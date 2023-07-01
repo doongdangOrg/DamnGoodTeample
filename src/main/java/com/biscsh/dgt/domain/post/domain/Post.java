@@ -4,8 +4,14 @@ package com.biscsh.dgt.domain.post.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.*;
 
 @Entity
+@Table(name = "post")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+@EqualsAndHashCode(of = {"id"})
+@ToString(of = {"title", "article"})
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,11 +28,6 @@ public class Post {
     @Size(max = 4000, message = "4000글자 내로 작성돼야 합니다.")
     private String article;
 
-
-    // FIXME: 파일로 저장할 건지 S3에 넘겨서 URL로 저장할건지 결정 필요
-    private String photo;
-
-
     private int recruitCnt;
 
     // TODO: 객체 구현해야 함 (시작일 - 종료일 , 대략적인 날짜(int))
@@ -42,4 +43,7 @@ public class Post {
      */
     @Embedded
     private RecruitPeriod recruitPeriod;
+
+    @Column(name = "test_or_not")
+    private boolean isTest;
 }
