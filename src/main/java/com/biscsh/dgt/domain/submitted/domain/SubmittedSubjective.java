@@ -1,5 +1,8 @@
 package com.biscsh.dgt.domain.submitted.domain;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -13,13 +16,18 @@ import lombok.NoArgsConstructor;
 @Table(name = "submitted_multiple")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@EqualsAndHashCode(of = {"memberId", "multipleChoiceId","questionId"})
+@EqualsAndHashCode(of = {"memberId","questionId"})
 //@ToString(of = {"score"})
+@IdClass(SubmittedSubjectiveId.class)
 public class SubmittedSubjective {
 
+    @Id
+    @Column(name = "member_id")
     @NotNull
     private Long memberId;
 
+    @Id
+    @Column(name = "question_id")
     @NotNull
     private Long questionId;
 
