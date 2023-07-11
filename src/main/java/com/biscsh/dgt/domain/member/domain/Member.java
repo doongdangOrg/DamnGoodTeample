@@ -1,12 +1,12 @@
 package com.biscsh.dgt.domain.member.domain;
 
-import com.biscsh.dgt.domain.member.domain.dto.CreateMemberDto;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -21,6 +21,10 @@ public class Member {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "member_id")
 	private Long id;
+
+	@Email(message = "이메일 형식이 아닙니다.")
+	@NotBlank
+	private String email;
 
 	@Size(min = 13, max = 13)
 	@NotNull
@@ -38,8 +42,9 @@ public class Member {
 	@NotNull
 	private String password;
 
-	private Member(Long id, String phoneNumber, String nickname, String name, String password) {
+	private Member(Long id, String email, String phoneNumber, String nickname, String name, String password) {
 		this.id = id;
+		this.email = email;
 		this.phoneNumber = phoneNumber;
 		this.nickname = nickname;
 		this.name = name;
@@ -48,6 +53,7 @@ public class Member {
 
 	public static class MemberBuilder {
 		private Long id;
+		private String email;
 		private String phoneNumber;
 		private String nickname;
 		private String name;
@@ -55,6 +61,11 @@ public class Member {
 
 		public MemberBuilder setId(Long id) {
 			this.id = id;
+			return this;
+		}
+
+		public MemberBuilder setEmail(String email){
+			this.email = email;
 			return this;
 		}
 
@@ -79,18 +90,8 @@ public class Member {
 		}
 
 		public Member build() {
-			return new Member(id, phoneNumber, nickname, name, password);
+			return new Member(id, email, phoneNumber, nickname, name, password);
 		}
-	}
-
-	public static Member toEntity(CreateMemberDto createMemberDto){
-		return new Member.MemberBuilder()
-			.setId(createMemberDto.getId())
-			.setPassword(createMemberDto.getPassword())
-			.setName(createMemberDto.getName())
-			.setNickname(createMemberDto.getNickname())
-			.setPhoneNumber(createMemberDto.getPhoneNumber())
-			.build();
 	}
 
 }
