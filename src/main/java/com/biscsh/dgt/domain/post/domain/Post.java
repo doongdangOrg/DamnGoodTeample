@@ -15,19 +15,21 @@ import lombok.*;
 @Builder
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString(of = {"title", "article"})
+@ToString(onlyExplicitlyIncluded = true)
 public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
     @EqualsAndHashCode.Include
+    @ToString.Include
     private Long id;
 
     @NotNull
     private Long memberId;
 
     @Size(min = 2, max = 100, message = "제목은 최소 2글자 ~ 100글자 내로 작성돼야 합니다.")
+    @ToString.Include
     private String title;
 
     @Size(max = 4000, message = "4000글자 내로 작성돼야 합니다.")

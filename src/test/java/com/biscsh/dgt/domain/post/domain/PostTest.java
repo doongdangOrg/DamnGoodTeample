@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 import static com.biscsh.dgt.domain.post.PostData.postRequest;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PostTest {
@@ -42,8 +43,10 @@ class PostTest {
         //given
         ActivatePeriod activatePeriod = ActivatePeriod.of(LocalDateTime.of(2023, 7, 11, 1, 40), LocalDateTime.of(2023, 7, 11, 1, 43));
         //when
-        Duration between = Duration.between(LocalDateTime.of(2023, 7, 11, 1, 43), LocalDateTime.of(2023, 7, 11, 1, 40));
+        Duration between = Duration.between(LocalDateTime.of(2023, 7, 11, 1, 40), LocalDateTime.of(2023, 7, 11, 1, 43));
+
         //then
+        assertThat(activatePeriod.getDuration()).isPositive();
         assertEquals(between, activatePeriod.getDuration());
     }
 }

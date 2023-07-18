@@ -19,12 +19,12 @@ import java.time.LocalDateTime;
 public class ActivatePeriod {
     @NotNull
     @ToString.Include
-    @FutureOrPresent
+//    @FutureOrPresent
     private LocalDateTime start;
 
     @NotNull
     @ToString.Include
-    @Future
+//    @Future
     private LocalDateTime end;
 
     @ToString.Include
@@ -40,6 +40,7 @@ public class ActivatePeriod {
     }
 
     private void calcDuration() {
-        duration = Duration.between(end, start);
+        duration = Duration.between(start, end);
+
     }
 }
