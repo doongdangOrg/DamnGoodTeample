@@ -1,5 +1,6 @@
 package com.biscsh.dgt.domain.post.dto;
 
+import com.biscsh.dgt.domain.post.domain.Post;
 import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -9,5 +10,11 @@ import lombok.*;
 @Builder
 public class PostResponse {
     @ToString.Include
-    private boolean isPost;
+    private Long postId;
+
+    public static PostResponse of(Post post) {
+        return PostResponse.builder()
+                .postId(post.getId())
+                .build();
+    }
 }

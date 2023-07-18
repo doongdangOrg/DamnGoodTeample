@@ -34,16 +34,23 @@ class PostServiceTest {
     @Test
     @DisplayName("공고 생성 서비스 계층 테스트")
     public void postCreate() throws Exception {
+        // given
         PostRequest request = postRequest();
         PostResponse response = postResponse();
-        // service -> repository
         lenient().when(postRepository.save(any(Post.class)))
-                .thenReturn(Post.of(request, 1L));
-        // controller -> service
+                .thenReturn(Post.builder()
+                        .id(1L)
+                        .title(request.getTitle())
+                        .article(request.getArticle())
+                        .activatePeriod(request.getActivatePeriod())
+                        .recruitPeriod(request.getRecruitPeriod())
+                        .isTest(request.isTest())
+                        .build());
+        // when
         PostResponse postResponse = postService.createPost(request, 1L);
 
-        // service -> controller
-        assertThat(postResponse.isPost()).isEqualTo(response.isPost());
+        // then
+        assertThat(postResponse.getPostId()).isEqualTo(response.getPostId());
 
     }
 

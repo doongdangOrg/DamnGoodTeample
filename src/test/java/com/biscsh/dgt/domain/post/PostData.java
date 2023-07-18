@@ -11,17 +11,18 @@ public class PostData {
 //    private PostData() {}
     public static PostResponse postResponse() {
         return PostResponse.builder()
-                .isPost(true)
+                .postId(1L)
                 .build();
     }
 
     public static PostRequest postRequest() {
         return PostRequest.builder()
-                .title("공")
-                .isTest(false)
-                .activatePeriod(ActivatePeriod.of(LocalDateTime.now(), LocalDateTime.of(2023, 8, 1, 0, 0)))
+                .title("공fea")
                 .article("z")
-                .recruitPeriod(ActivatePeriod.of(LocalDateTime.now(), LocalDateTime.of(2023, 8, 1, 0, 0)))
+                .recruitCnt(5)
+                .activatePeriod(ActivatePeriod.of(LocalDateTime.of(2023, 7, 19, 12, 43, 10), LocalDateTime.of(2023, 8, 1, 0, 0)))
+                .recruitPeriod(ActivatePeriod.of(LocalDateTime.of(2023, 7, 19, 12, 43, 10), LocalDateTime.of(2023, 8, 1, 0, 0)))
+                .isTest(false)
                 .build();
     }
 }
