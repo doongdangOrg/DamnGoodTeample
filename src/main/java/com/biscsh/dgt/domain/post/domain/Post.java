@@ -41,11 +41,21 @@ public class Post {
     // TODO: 객체 구현해야 함 (시작일 - 종료일 , 대략적인 날짜(int))
     // 시작일 - 종료일 (선택시)-> 대략적인 날짜를 계산해서 저장함(3개월).
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "start", column = @Column(name = "activity_start_date")),
+            @AttributeOverride(name = "end", column = @Column(name = "activity_end_date")),
+            @AttributeOverride(name = "duration", column = @Column(name = "activity_duration"))
+    })
     private ActivatePeriod activatePeriod;
 
     private int viewCnt;
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "start", column = @Column(name = "recruit_start_date")),
+            @AttributeOverride(name = "end", column = @Column(name = "recruit_end_date")),
+            @AttributeOverride(name = "duration", column = @Column(name = "recruit_duration"))
+    })
     private ActivatePeriod recruitPeriod;
 
     @Column(name = "test_or_not")

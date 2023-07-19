@@ -16,14 +16,17 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @ToString(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ActivatePeriod {
     @NotNull
     @ToString.Include
+    @EqualsAndHashCode.Include
 //    @FutureOrPresent
     private LocalDateTime start;
 
     @NotNull
     @ToString.Include
+    @EqualsAndHashCode.Include
 //    @Future
     private LocalDateTime end;
 

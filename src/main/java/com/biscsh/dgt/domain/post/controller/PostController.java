@@ -21,6 +21,7 @@ public class PostController {
 
     @PostMapping("/create")
     public ResponseEntity<PostResponse> createPost(@RequestBody PostRequest postRequest) {
+        // TODO: 로그인 완성되면 세션에서 memberId꺼내 쓸 예정
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(postService.createPost(postRequest, 1L));
     }
