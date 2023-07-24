@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-//@ActiveProfiles("test")
+@ActiveProfiles("test")
 class PostRepositoryTest {
 
     @Autowired
