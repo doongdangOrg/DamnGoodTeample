@@ -1,15 +1,18 @@
 package com.biscsh.dgt.domain.member.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import com.biscsh.dgt.domain.member.domain.dto.LogInRequest;
-import com.biscsh.dgt.domain.member.domain.dto.SignUpRequest;
+import com.biscsh.dgt.domain.member.dto.LogInRequest;
+import com.biscsh.dgt.domain.member.dto.SignUpRequest;
+import com.biscsh.dgt.domain.member.dto.SignUpResponse;
 import com.biscsh.dgt.domain.member.service.MemberService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -18,26 +21,28 @@ public class MemberController {
 
 	private final MemberService memberService;
 
-	@GetMapping("/signup")
-	public String signUp(Model model){
-		model.addAttribute("signUpRequest", new SignUpRequest());
-
-		return "signup";
-	}
-
 	@PostMapping("/signup")
-	public String signUp(@ModelAttribute SignUpRequest signUpRequest){
-		memberService.signUp(signUpRequest);
-
-		return "redirect:/login";
+	public ResponseEntity<SignUpResponse> signUp(@RequestBody SignUpRequest signUpRequest){
+		return ResponseEntity.status(HttpStatus.CREATED)
+			.body(memberService.signUp(signUpRequest));
 	}
 
-	@GetMapping("/login")
-	public String logIn(Model model){
-		model.addAttribute("logInRequest", new LogInRequest());
+	@PostMapping("/login")
+	public void logIn(@RequestBody LogInRequest logInRequest, HttpServletRequest request){
+		Long loginMember = memberService.logIn(logInRequest);
 
-		return "login";
+		if(loginMember == null){
+
+		}
+
+		HttpSession session = request.getSession();
+		session.setAttribute("memberId", loginMember);
+		session.setMaxInactiveInterval(1800);
 	}
 
+	@PostMapping("/logout")
+	public void logOut(HttpSession session){
+		session.invalidate();
+	}
 
 }
