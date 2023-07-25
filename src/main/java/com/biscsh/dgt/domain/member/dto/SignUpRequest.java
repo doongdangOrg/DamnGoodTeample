@@ -1,4 +1,4 @@
-package com.biscsh.dgt.domain.member.domain.dto;
+package com.biscsh.dgt.domain.member.dto;
 
 import com.biscsh.dgt.domain.member.domain.Member;
 
