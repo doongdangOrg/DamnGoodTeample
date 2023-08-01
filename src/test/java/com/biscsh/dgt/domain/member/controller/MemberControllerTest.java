@@ -1,10 +1,7 @@
 package com.biscsh.dgt.domain.member.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +16,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.biscsh.dgt.domain.member.domain.Member;
 import com.biscsh.dgt.domain.member.dto.SignUpRequest;
 import com.biscsh.dgt.domain.member.dto.SignUpResponse;
 import com.biscsh.dgt.domain.member.service.MemberService;
@@ -97,22 +93,4 @@ class MemberControllerTest {
 		ResultActions resultActions = result.andExpect(status().isBadRequest());
 	}
 
-	@DisplayName("중복 회원 테스트")
-	@Test
-	void test_duplicateMember(){
-	    //given
-		SignUpRequest signUpRequest = signUpRequest();
-		Member member = new Member.MemberBuilder()
-			.setEmail("test@test.com")
-			.setPassword("1433")
-			.setNickname("req")
-			.setName("ehdfhf")
-			.build();
-	    //when
-		when(memberService.isExistEmail(signUpRequest.getEmail())).thenReturn(Optional.of(member));
-		Optional<Member> existMember = memberService.isExistEmail(signUpRequest.getEmail());
-
-	    //then
-		assertEquals(signUpRequest.getEmail(), existMember.get().getEmail());
-	}
 }
