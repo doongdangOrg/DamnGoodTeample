@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -86,17 +85,17 @@ class MemberControllerTest {
 	void test_duplicateMember(){
 	    //given
 		SignUpRequest signUpRequest = signUpRequest();
-		Member existMember = new Member.MemberBuilder()
+		Member member = new Member.MemberBuilder()
 			.setEmail("test@test.com")
 			.setPassword("1433")
 			.setNickname("req")
 			.setName("ehdfhf")
 			.build();
 	    //when
-		Mockito.lenient().doReturn(Optional.empty()).when(memberService)
-			.isExistEmail(signUpRequest.getEmail());
+		when(memberService.isExistEmail(signUpRequest.getEmail())).thenReturn(Optional.of(member));
+		Optional<Member> existMember = memberService.isExistEmail(signUpRequest.getEmail());
 
 	    //then
-		assertEquals(signUpRequest.getEmail(), existMember.getEmail());
+		assertEquals(signUpRequest.getEmail(), existMember.get().getEmail());
 	}
 }
