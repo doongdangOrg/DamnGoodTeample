@@ -80,6 +80,23 @@ class MemberControllerTest {
 			.andExpect(jsonPath("phoneNumber", signUpResponse.getPhoneNumber()).exists());
 	}
 
+	@DisplayName("회원가입 실패 테스트")
+	@Test
+	void test_signup_fail() throws Exception {
+	    //given
+		SignUpRequest signUpRequest = signUpRequest();
+		doReturn(null).when(memberService).signup(any(SignUpRequest.class));
+
+	    //when
+		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/signup")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(new Gson().toJson(signUpRequest))
+		);
+
+	    //then
+		ResultActions resultActions = result.andExpect(status().isBadRequest());
+	}
+
 	@DisplayName("중복 회원 테스트")
 	@Test
 	void test_duplicateMember(){
