@@ -1,6 +1,9 @@
 package com.biscsh.dgt.domain.member.service;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
+import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +37,7 @@ class MemberServiceTest {
 			.build();
 	}
 
-	@DisplayName("회원 가입 성공 테스트")
+	@DisplayName("회원가입 성공 테스트")
 	@Test
 	void test_signup_success(){
 	    //given
@@ -45,5 +48,18 @@ class MemberServiceTest {
 
 		//then
 		Assertions.assertEquals(request.getEmail(), response.getEmail());
+	}
+
+	@DisplayName("회원가입 실패 테스트 - 이메일 중복")
+	@Test
+	void test_signup_fail_by_email(){
+	    //given
+		SignUpRequest request = signUpRequest();
+		doReturn(Optional.of(request.toEntity())).when(memberRepository).findByEmail(request.getEmail());
+		//when
+		SignUpResponse response = memberService.signup(request);
+
+		//then
+		assertThat(response).isEqualTo(null);
 	}
 }
