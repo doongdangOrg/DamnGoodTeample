@@ -62,4 +62,17 @@ class MemberServiceTest {
 		//then
 		assertThat(response).isEqualTo(null);
 	}
+
+	@DisplayName("회원가입 실패 테스트 - 닉네임 중복")
+	@Test
+	void test_signup_fail_by_nickname(){
+		//given
+		SignUpRequest request = signUpRequest();
+		doReturn(Optional.of(request.toEntity())).when(memberRepository).findByNickname(request.getNickname());
+		//when
+		SignUpResponse response = memberService.signup(request);
+
+		//then
+		assertThat(response).isEqualTo(null);
+	}
 }
