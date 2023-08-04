@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.biscsh.dgt.domain.member.domain.Member;
+import com.biscsh.dgt.domain.member.dto.LogInRequest;
 import com.biscsh.dgt.domain.member.dto.SignUpRequest;
 import com.biscsh.dgt.domain.member.dto.SignUpResponse;
 import com.biscsh.dgt.domain.member.repository.MemberRepository;
@@ -39,6 +40,18 @@ public class MemberService {
 			.nickname(savedMember.getNickname())
 			.phoneNumber(savedMember.getPhoneNumber())
 			.build();
+	}
+
+	public Long login(LogInRequest logInRequest){
+		Optional<Member> member = memberRepository.findByEmail(logInRequest.getEmail());
+		if(member.isEmpty()){
+			return null;
+		}
+
+		if(!member.get().getPassword().equals(logInRequest.getPassword())){
+			return null;
+		}
+		return member.get().getId();
 	}
 
 	public Optional<Member> isExistEmail(String email) {
