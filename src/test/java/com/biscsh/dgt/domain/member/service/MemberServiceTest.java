@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.biscsh.dgt.domain.member.domain.Member;
 import com.biscsh.dgt.domain.member.dto.SignUpRequest;
@@ -41,13 +42,23 @@ class MemberServiceTest {
 	@Test
 	void test_signup_success(){
 	    //given
+		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 		SignUpRequest request = signUpRequest();
-		doReturn(request.toEntity()).when(memberRepository).save(any(Member.class));
+		String encodeRequestPwd = bCryptPasswordEncoder.encode(request.getPassword());
+		doReturn(new Member.MemberBuilder()
+			.setEmail(request.getEmail())
+			.setPassword(encodeRequestPwd)
+			.setName(request.getName())
+			.setNickname(request.getNickname())
+			.setPhoneNumber(request.getPhoneNumber())
+			.build()
+		).when(memberRepository).save(any(Member.class));
 	    //when
 		SignUpResponse response = memberService.signup(request);
 
 		//then
 		Assertions.assertEquals(request.getEmail(), response.getEmail());
+		assertThat(bCryptPasswordEncoder.matches(request.getPassword(), response.getPassword())).isTrue();
 	}
 
 	@DisplayName("회원가입 실패 테스트 - 이메일 중복")
