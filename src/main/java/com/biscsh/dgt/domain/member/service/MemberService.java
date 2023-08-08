@@ -2,6 +2,7 @@ package com.biscsh.dgt.domain.member.service;
 
 import java.util.Optional;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.biscsh.dgt.domain.member.domain.Member;
@@ -19,6 +20,8 @@ public class MemberService {
 	//TODO: 에러처리 필요(현재는 return null)
 	private final MemberRepository memberRepository;
 
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
 	public SignUpResponse signup(SignUpRequest signUpRequest){
 		//중복 이메일 체크
 		if(isExistEmail(signUpRequest.getEmail()).isPresent()){
@@ -30,6 +33,7 @@ public class MemberService {
 			return null;
 		}
 
+		signUpRequest.setPassword(bCryptPasswordEncoder.encode(signUpRequest.getPassword()));
 		Member newMember = signUpRequest.toEntity();
 		Member savedMember = memberRepository.save(newMember);
 
