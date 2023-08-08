@@ -19,8 +19,7 @@ public class MemberService {
 
 	//TODO: 에러처리 필요(현재는 return null)
 	private final MemberRepository memberRepository;
-
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 	public SignUpResponse signup(SignUpRequest signUpRequest){
 		//중복 이메일 체크
@@ -33,8 +32,13 @@ public class MemberService {
 			return null;
 		}
 
-		signUpRequest.setPassword(bCryptPasswordEncoder.encode(signUpRequest.getPassword()));
-		Member newMember = signUpRequest.toEntity();
+		Member newMember = new Member.MemberBuilder()
+			.setEmail(signUpRequest.getEmail())
+			.setPassword(encoder.encode(signUpRequest.getPassword()))
+			.setName(signUpRequest.getName())
+			.setNickname(signUpRequest.getNickname())
+			.setPhoneNumber(signUpRequest.getPhoneNumber())
+			.build();
 		Member savedMember = memberRepository.save(newMember);
 
 		return SignUpResponse.builder()
