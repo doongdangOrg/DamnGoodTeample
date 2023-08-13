@@ -13,8 +13,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.biscsh.dgt.domain.member.domain.Member;
+import com.biscsh.dgt.domain.member.dto.LogInRequest;
 import com.biscsh.dgt.domain.member.dto.SignUpRequest;
 import com.biscsh.dgt.domain.member.dto.SignUpResponse;
 import com.biscsh.dgt.domain.member.repository.MemberRepository;
@@ -28,6 +30,9 @@ class MemberServiceTest {
 	@InjectMocks
 	private MemberService memberService;
 
+	private final PasswordEncoder encoder = new BCryptPasswordEncoder();
+
+
 	private SignUpRequest signUpRequest() {
 		return SignUpRequest.builder()
 			.email("test@test.com")
@@ -36,6 +41,12 @@ class MemberServiceTest {
 			.phoneNumber("010-XXXX-XXXX")
 			.nickname("test")
 			.build();
+	}
+	private LogInRequest logInRequest(){
+		LogInRequest request = new LogInRequest();
+		request.setEmail("test@test.com");
+		request.setPassword("1234");
+		return request;
 	}
 
 	@DisplayName("회원가입 성공 테스트")
@@ -86,4 +97,56 @@ class MemberServiceTest {
 		//then
 		assertThat(response).isEqualTo(null);
 	}
+
+	@DisplayName("로그인 성공 테스트")
+	@Test
+	void test_login_success (){
+	    //given
+		LogInRequest logInRequest = logInRequest();
+		Member member = new Member.MemberBuilder()
+			.setId(1L)
+			.setEmail(logInRequest.getEmail())
+			.setPassword(encoder.encode(logInRequest.getPassword()))
+			.build();
+		doReturn(Optional.of(member)).when(memberRepository).findByEmail(logInRequest.getEmail());
+
+	    //when
+		Long loginId = memberService.login(logInRequest);
+
+		//then
+		assertThat(loginId).isEqualTo(1L);
+	}
+
+	@DisplayName("로그인 실패 테스트 - 존재하지 않는 사용자")
+	@Test
+	void test_login_fail_by_Member(){
+	    //given
+	    LogInRequest logInRequest = logInRequest();
+		doReturn(Optional.empty()).when(memberRepository).findByEmail(logInRequest.getEmail());
+
+	    //when
+		Long loginId = memberService.login(logInRequest);
+
+		//then
+		assertThat(loginId).isNull();
+	}
+
+	@DisplayName("로그인 실패 테스트 - 비밀번호 불일치")
+	@Test
+	void test_login_fail_by_password(){
+	    //given
+		LogInRequest logInRequest = logInRequest();
+		Member member = new Member.MemberBuilder()
+			.setId(1L)
+			.setEmail(logInRequest.getEmail())
+			.setPassword(encoder.encode(logInRequest.getPassword()+"1"))
+			.build();
+		//when
+
+	    //then
+		assertThat(encoder.matches(logInRequest.getPassword(), member.getPassword())).isFalse();
+
+	}
+
+
 }
