@@ -56,7 +56,7 @@ public class MemberService {
 			return null;
 		}
 
-		if(!member.get().getPassword().equals(logInRequest.getPassword())){
+		if(!encoder.matches(logInRequest.getPassword(), member.get().getPassword())){
 			return null;
 		}
 		return member.get().getId();
