@@ -24,9 +24,7 @@ public class MemberController {
 	@PostMapping("/signup")
 	public ResponseEntity<SignUpResponse> signup (@RequestBody SignUpRequest signUpRequest){
 		SignUpResponse signup = memberService.signup(signUpRequest);
-		if(signup == null){
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-		}
+
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(signup);
 	}
@@ -34,10 +32,6 @@ public class MemberController {
 	@PostMapping("/login")
 	public ResponseEntity<Long> login(HttpServletRequest servletRequest, @RequestBody LogInRequest logInRequest){
 		Long loginId = memberService.login(logInRequest);
-
-		if(loginId == null){
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-		}
 
 		HttpSession session = servletRequest.getSession();
 		session.setAttribute("login", loginId);
