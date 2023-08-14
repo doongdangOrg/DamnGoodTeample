@@ -1,6 +1,6 @@
 package com.biscsh.dgt.domain.member.service;
 
-import java.util.Optional;
+import static com.biscsh.dgt.domain.member.exception.MemberErrorCode.*;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -9,6 +9,7 @@ import com.biscsh.dgt.domain.member.domain.Member;
 import com.biscsh.dgt.domain.member.dto.LogInRequest;
 import com.biscsh.dgt.domain.member.dto.SignUpRequest;
 import com.biscsh.dgt.domain.member.dto.SignUpResponse;
+import com.biscsh.dgt.domain.member.exception.MemberException;
 import com.biscsh.dgt.domain.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -23,14 +24,10 @@ public class MemberService {
 
 	public SignUpResponse signup(SignUpRequest signUpRequest){
 		//중복 이메일 체크
-		if(isExistEmail(signUpRequest.getEmail()).isPresent()){
-			return null;
-		}
+		checkDuplicateEmail(signUpRequest.getEmail());
 
 		//중복 닉네임 체크
-		if(isExistNickname(signUpRequest.getNickname())){
-			return null;
-		}
+		checkDuplicateNickname(signUpRequest.getNickname());
 
 		Member newMember = Member.newMember(signUpRequest.getEmail(), signUpRequest.getPhoneNumber(),
 			signUpRequest.getNickname(), signUpRequest.getName(), encoder.encode(signUpRequest.getPassword())) ;
@@ -47,24 +44,34 @@ public class MemberService {
 	}
 
 	public Long login(LogInRequest logInRequest){
-		Optional<Member> member = memberRepository.findByEmail(logInRequest.getEmail());
-		if(member.isEmpty()){
-			return null;
-		}
+		//이메일을 통한 멤버 조회
+		Member member = getMember(logInRequest.getEmail());
 
-		if(!encoder.matches(logInRequest.getPassword(), member.get().getPassword())){
-			return null;
-		}
-		return member.get().getId();
+		//비밀번호 일치 여부 확인
+		checkPassword(logInRequest.getPassword(), member.getPassword());
+
+		return member.getId();
 	}
 
-	public Optional<Member> isExistEmail(String email) {
-		return memberRepository.findByEmail(email);
+	private void checkDuplicateEmail(String email){
+		if(memberRepository.findByEmail(email).isPresent()){
+			throw new MemberException(EMAIL_ALREADY_EXIST);
+		}
 	}
 
-	public boolean isExistNickname(String nickname) {
-		Optional<Member> result = memberRepository.findByNickname(nickname);
+	private Member getMember(String email){
+		return memberRepository.findByEmail(email).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+	}
 
-		return result.isPresent();
+	private void checkDuplicateNickname(String nickname){
+		if(memberRepository.findByNickname(nickname).isPresent()){
+			throw new MemberException(NICKNAME_ALREADY_EXIST);
+		}
+	}
+
+	private void checkPassword(String requestPassword, String memberPassword){
+		if(!encoder.matches(requestPassword, memberPassword)){
+			throw new MemberException(PASSWORD_UN_MATCH);
+		}
 	}
 }
