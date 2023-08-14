@@ -51,6 +51,16 @@ public class Member {
 		this.password = password;
 	}
 
+	public static Member newMember(String email, String phoneNumber, String nickname, String name, String password){
+		return new Member.MemberBuilder()
+			.setEmail(email)
+			.setPhoneNumber(phoneNumber)
+			.setNickname(nickname)
+			.setName(name)
+			.setPassword(password)
+			.build();
+	}
+
 	public static class MemberBuilder {
 		private Long id;
 		private String email;
