@@ -32,13 +32,9 @@ public class MemberService {
 			return null;
 		}
 
-		Member newMember = new Member.MemberBuilder()
-			.setEmail(signUpRequest.getEmail())
-			.setPassword(encoder.encode(signUpRequest.getPassword()))
-			.setName(signUpRequest.getName())
-			.setNickname(signUpRequest.getNickname())
-			.setPhoneNumber(signUpRequest.getPhoneNumber())
-			.build();
+		Member newMember = Member.newMember(signUpRequest.getEmail(), signUpRequest.getPhoneNumber(),
+			signUpRequest.getNickname(), signUpRequest.getName(), encoder.encode(signUpRequest.getPassword())) ;
+
 		Member savedMember = memberRepository.save(newMember);
 
 		return SignUpResponse.builder()
