@@ -2,7 +2,6 @@ package com.biscsh.dgt.domain.member.service;
 
 import static com.biscsh.dgt.domain.member.exception.MemberErrorCode.*;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.biscsh.dgt.domain.member.domain.Member;
@@ -20,7 +19,6 @@ public class MemberService {
 
 	//TODO: 에러처리 필요(현재는 return null)
 	private final MemberRepository memberRepository;
-	private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 	public SignUpResponse signup(SignUpRequest signUpRequest){
 		//중복 이메일 체크
@@ -28,7 +26,7 @@ public class MemberService {
 
 		//중복 닉네임 체크
 		checkDuplicateNickname(signUpRequest.getNickname());
-		signUpRequest.setPassword(encoder.encode(signUpRequest.getPassword()));
+
 		Member newMember = signUpRequest.toEntity();
 		Member savedMember = memberRepository.save(newMember);
 
@@ -68,7 +66,7 @@ public class MemberService {
 	}
 
 	private void checkPassword(String requestPassword, String memberPassword){
-		if(!encoder.matches(requestPassword, memberPassword)){
+		if(!requestPassword.equals(memberPassword) ){
 			throw new MemberException(PASSWORD_UN_MATCH);
 		}
 	}

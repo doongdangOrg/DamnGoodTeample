@@ -2,6 +2,7 @@ package com.biscsh.dgt.domain.member.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,9 +21,11 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 
 	private final MemberService memberService;
+	private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 	@PostMapping("/signup")
 	public ResponseEntity<SignUpResponse> signup (@RequestBody SignUpRequest signUpRequest){
+		signUpRequest.setPassword(encoder.encode(signUpRequest.getPassword()));
 		SignUpResponse signup = memberService.signup(signUpRequest);
 
 		return ResponseEntity.status(HttpStatus.CREATED)
