@@ -58,9 +58,10 @@ class MemberControllerTest {
 	}
 
 	private LogInRequest logInRequest(){
-		LogInRequest request = new LogInRequest();
-		request.setEmail("test@test.com");
-		request.setPassword("1234");
+		LogInRequest request = LogInRequest.builder()
+			.email("test@test.com")
+			.password("1234")
+			.build();
 		return request;
 	}
 
