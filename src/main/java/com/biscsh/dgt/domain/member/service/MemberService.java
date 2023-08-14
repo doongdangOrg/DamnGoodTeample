@@ -28,10 +28,8 @@ public class MemberService {
 
 		//중복 닉네임 체크
 		checkDuplicateNickname(signUpRequest.getNickname());
-
-		Member newMember = Member.newMember(signUpRequest.getEmail(), signUpRequest.getPhoneNumber(),
-			signUpRequest.getNickname(), signUpRequest.getName(), encoder.encode(signUpRequest.getPassword())) ;
-
+		signUpRequest.setPassword(encoder.encode(signUpRequest.getPassword()));
+		Member newMember = signUpRequest.toEntity();
 		Member savedMember = memberRepository.save(newMember);
 
 		return SignUpResponse.builder()
