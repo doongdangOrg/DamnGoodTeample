@@ -1,6 +1,7 @@
 package com.biscsh.dgt.domain.member.service;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Optional;
@@ -18,7 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.biscsh.dgt.domain.member.domain.Member;
 import com.biscsh.dgt.domain.member.dto.LogInRequest;
 import com.biscsh.dgt.domain.member.dto.SignUpRequest;
-import com.biscsh.dgt.domain.member.dto.SignUpResponse;
+import com.biscsh.dgt.domain.member.exception.MemberErrorCode;
+import com.biscsh.dgt.domain.member.exception.MemberException;
 import com.biscsh.dgt.domain.member.repository.MemberRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -54,23 +56,14 @@ class MemberServiceTest {
 	@Test
 	void test_signup_success(){
 	    //given
-		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 		SignUpRequest request = signUpRequest();
-		String encodeRequestPwd = bCryptPasswordEncoder.encode(request.getPassword());
-		doReturn(new Member.MemberBuilder()
-			.setEmail(request.getEmail())
-			.setPassword(encodeRequestPwd)
-			.setName(request.getName())
-			.setNickname(request.getNickname())
-			.setPhoneNumber(request.getPhoneNumber())
-			.build()
-		).when(memberRepository).save(any(Member.class));
+		doReturn(request.toEntity()).when(memberRepository).save(any(Member.class));
 	    //when
-		SignUpResponse response = memberService.signup(request);
+		Boolean response = memberService.signup(request);
 
 		//then
-		Assertions.assertEquals(request.getEmail(), response.getEmail());
-		assertThat(bCryptPasswordEncoder.matches(request.getPassword(), response.getPassword())).isTrue();
+		Assertions.assertEquals(response, true);
+		assertThat(request.getEmail()).isEqualTo(request.toEntity().getEmail());
 	}
 
 	@DisplayName("회원가입 실패 테스트 - 이메일 중복")
@@ -80,10 +73,10 @@ class MemberServiceTest {
 		SignUpRequest request = signUpRequest();
 		doReturn(Optional.of(request.toEntity())).when(memberRepository).findByEmail(request.getEmail());
 		//when
-		SignUpResponse response = memberService.signup(request);
+		MemberException exception = assertThrows(MemberException.class, () -> memberService.signup(request));
 
 		//then
-		assertThat(response).isEqualTo(null);
+		assertThat(exception.getErrorCode()).isEqualTo(MemberErrorCode.EMAIL_ALREADY_EXIST);
 	}
 
 	@DisplayName("회원가입 실패 테스트 - 닉네임 중복")
@@ -93,10 +86,10 @@ class MemberServiceTest {
 		SignUpRequest request = signUpRequest();
 		doReturn(Optional.of(request.toEntity())).when(memberRepository).findByNickname(request.getNickname());
 		//when
-		SignUpResponse response = memberService.signup(request);
+		MemberException exception = assertThrows(MemberException.class, () -> memberService.signup(request));
 
 		//then
-		assertThat(response).isEqualTo(null);
+		assertThat(exception.getErrorCode()).isEqualTo(MemberErrorCode.NICKNAME_ALREADY_EXIST);
 	}
 
 	@DisplayName("로그인 성공 테스트")
@@ -107,15 +100,15 @@ class MemberServiceTest {
 		Member member = new Member.MemberBuilder()
 			.setId(1L)
 			.setEmail(logInRequest.getEmail())
-			.setPassword(encoder.encode(logInRequest.getPassword()))
+			.setPassword(logInRequest.getPassword())
 			.build();
 		doReturn(Optional.of(member)).when(memberRepository).findByEmail(logInRequest.getEmail());
 
 	    //when
-		Long loginId = memberService.login(logInRequest);
+		Boolean loginSuccess = memberService.login(logInRequest);
 
 		//then
-		assertThat(loginId).isEqualTo(1L);
+		assertThat(loginSuccess).isTrue();
 	}
 
 	@DisplayName("로그인 실패 테스트 - 존재하지 않는 사용자")
@@ -125,11 +118,11 @@ class MemberServiceTest {
 	    LogInRequest logInRequest = logInRequest();
 		doReturn(Optional.empty()).when(memberRepository).findByEmail(logInRequest.getEmail());
 
-	    //when
-		Long loginId = memberService.login(logInRequest);
+		//when
+		MemberException exception = assertThrows(MemberException.class, () -> memberService.login(logInRequest));
 
 		//then
-		assertThat(loginId).isNull();
+		assertThat(exception.getErrorCode()).isEqualTo(MemberErrorCode.MEMBER_NOT_FOUND);
 	}
 
 	@DisplayName("로그인 실패 테스트 - 비밀번호 불일치")
