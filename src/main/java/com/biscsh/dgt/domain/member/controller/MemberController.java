@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.biscsh.dgt.domain.member.dto.LogInRequest;
 import com.biscsh.dgt.domain.member.dto.SignUpRequest;
-import com.biscsh.dgt.domain.member.dto.SignUpResponse;
 import com.biscsh.dgt.domain.member.service.MemberService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,22 +23,22 @@ public class MemberController {
 	private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 	@PostMapping("/signup")
-	public ResponseEntity<SignUpResponse> signup (@RequestBody SignUpRequest signUpRequest){
+	public ResponseEntity<Boolean> signup (@RequestBody SignUpRequest signUpRequest){
 		signUpRequest.setPassword(encoder.encode(signUpRequest.getPassword()));
-		SignUpResponse signup = memberService.signup(signUpRequest);
+		Boolean signupSuccess = memberService.signup(signUpRequest);
 
 		return ResponseEntity.status(HttpStatus.CREATED)
-			.body(signup);
+			.body(signupSuccess);
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<Long> login(HttpServletRequest servletRequest, @RequestBody LogInRequest logInRequest){
-		Long loginId = memberService.login(logInRequest);
+	public ResponseEntity<Boolean> login(HttpServletRequest servletRequest, @RequestBody LogInRequest logInRequest){
+		Boolean loginSuccess = memberService.login(logInRequest);
 
 		HttpSession session = servletRequest.getSession();
-		session.setAttribute("login", loginId);
+		session.setAttribute("login", loginSuccess);
 		session.setMaxInactiveInterval(1800);
 
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(loginId);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(loginSuccess);
 	}
 }
