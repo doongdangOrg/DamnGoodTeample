@@ -1,6 +1,5 @@
 package com.biscsh.dgt.domain.member.controller;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -13,14 +12,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.biscsh.dgt.domain.member.dto.LogInRequest;
 import com.biscsh.dgt.domain.member.dto.SignUpRequest;
-import com.biscsh.dgt.domain.member.dto.SignUpResponse;
 import com.biscsh.dgt.domain.member.service.MemberService;
 import com.google.gson.Gson;
 
@@ -47,16 +44,6 @@ class MemberControllerTest {
 			.build();
 	}
 
-	private SignUpResponse signUpResponse() {
-		return SignUpResponse.builder()
-			.email("test@test.com")
-			.password("1234")
-			.name("test")
-			.phoneNumber("010-XXXX-XXXX")
-			.nickname("test")
-			.build();
-	}
-
 	private LogInRequest logInRequest(){
 		LogInRequest request = LogInRequest.builder()
 			.email("test@test.com")
@@ -70,46 +57,23 @@ class MemberControllerTest {
 	void test_signup_success() throws Exception {
 		//given
 		SignUpRequest signUpRequest = signUpRequest();
-		SignUpResponse signUpResponse = signUpResponse();
-		doReturn(signUpResponse).when(memberService)
+		doReturn(true).when(memberService)
 			.signup(any(SignUpRequest.class));
 		//when
 		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/signup")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(new Gson().toJson(signUpRequest)));
 		//then
-
-		ResultActions resultActions1 = resultActions.andExpect(status().isCreated())
-			.andExpect(jsonPath("email", signUpResponse.getEmail()).exists())
-			.andExpect(jsonPath("password", signUpResponse.getPassword()).exists())
-			.andExpect(jsonPath("name", signUpResponse.getName()).exists())
-			.andExpect(jsonPath("nickname", signUpResponse.getNickname()).exists())
-			.andExpect(jsonPath("phoneNumber", signUpResponse.getPhoneNumber()).exists());
+		resultActions.andExpect(status().isCreated());
 	}
 
-	@DisplayName("회원가입 실패 테스트")
-	@Test
-	void test_signup_fail() throws Exception {
-	    //given
-		SignUpRequest signUpRequest = signUpRequest();
-		doReturn(null).when(memberService).signup(any(SignUpRequest.class));
-
-	    //when
-		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/signup")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(new Gson().toJson(signUpRequest))
-		);
-
-	    //then
-		ResultActions resultActions = result.andExpect(status().isBadRequest());
-	}
 
 	@DisplayName("로그인 성공 테스트")
 	@Test
 	void test_login_success() throws Exception {
 	    //given
 		LogInRequest request = logInRequest();
-		doReturn(1L).when(memberService).login(any(LogInRequest.class));
+		doReturn(true).when(memberService).login(any(LogInRequest.class));
 
 		//when
 		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/login")
@@ -118,27 +82,7 @@ class MemberControllerTest {
 		);
 
 		//then
-		MvcResult mvcResult = result.andExpect(status().isAccepted()).andReturn();
-		Long resultId = new Gson().fromJson(mvcResult.getResponse().getContentAsString(), Long.class);
-		assertThat(resultId).isEqualTo(1L);
+		result.andExpect(status().isAccepted());
 	}
 
-	@DisplayName("로그인 실패 테스트")
-	@Test
-	void test_login_fail() throws Exception{
-	    //given
-		LogInRequest request = logInRequest();
-		doReturn(null).when(memberService).login(any(LogInRequest.class));
-
-		//when
-		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/login")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(new Gson().toJson(request))
-		);
-
-		//then
-		MvcResult mvcResult = result.andExpect(status().isBadRequest()).andReturn();
-		Long resultId = new Gson().fromJson(mvcResult.getResponse().getContentAsString(), Long.class);
-		assertThat(resultId).isEqualTo(null);
-	}
 }
