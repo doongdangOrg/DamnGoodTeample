@@ -32,14 +32,14 @@ public class MemberService {
 		return true;
 	}
 
-	public boolean login(LogInRequest logInRequest){
+	public Long login(LogInRequest logInRequest){
 		//이메일을 통한 멤버 조회
 		Member member = getMember(logInRequest.getEmail());
 
 		//비밀번호 일치 여부 확인
 		checkPassword(logInRequest.getPassword(), member.getPassword());
 
-		return true;
+		return member.getId();
 	}
 
 	private void checkDuplicateEmail(String email){

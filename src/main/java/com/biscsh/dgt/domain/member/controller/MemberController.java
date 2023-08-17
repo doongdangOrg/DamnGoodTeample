@@ -33,12 +33,12 @@ public class MemberController {
 
 	@PostMapping("/login")
 	public ResponseEntity<Boolean> login(HttpServletRequest servletRequest, @RequestBody LogInRequest logInRequest){
-		Boolean loginSuccess = memberService.login(logInRequest);
+		Long loginMemberId = memberService.login(logInRequest);
 
 		HttpSession session = servletRequest.getSession();
-		session.setAttribute("login", loginSuccess);
+		session.setAttribute("login", loginMemberId);
 		session.setMaxInactiveInterval(1800);
 
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(loginSuccess);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
 	}
 }

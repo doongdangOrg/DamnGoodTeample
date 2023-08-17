@@ -105,10 +105,10 @@ class MemberServiceTest {
 		doReturn(Optional.of(member)).when(memberRepository).findByEmail(logInRequest.getEmail());
 
 	    //when
-		Boolean loginSuccess = memberService.login(logInRequest);
+		Long loginMemberId = memberService.login(logInRequest);
 
 		//then
-		assertThat(loginSuccess).isTrue();
+		assertThat(loginMemberId).isEqualTo(1L);
 	}
 
 	@DisplayName("로그인 실패 테스트 - 존재하지 않는 사용자")
