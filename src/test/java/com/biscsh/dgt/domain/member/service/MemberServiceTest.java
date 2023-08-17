@@ -59,7 +59,7 @@ class MemberServiceTest {
 		SignUpRequest request = signUpRequest();
 		doReturn(request.toEntity()).when(memberRepository).save(any(Member.class));
 	    //when
-		Boolean response = memberService.signup(request);
+		Boolean response = memberService.signUp(request);
 
 		//then
 		Assertions.assertEquals(response, true);
@@ -73,7 +73,7 @@ class MemberServiceTest {
 		SignUpRequest request = signUpRequest();
 		doReturn(Optional.of(request.toEntity())).when(memberRepository).findByEmail(request.getEmail());
 		//when
-		MemberException exception = assertThrows(MemberException.class, () -> memberService.signup(request));
+		MemberException exception = assertThrows(MemberException.class, () -> memberService.signUp(request));
 
 		//then
 		assertThat(exception.getErrorCode()).isEqualTo(MemberErrorCode.EMAIL_ALREADY_EXIST);
@@ -86,7 +86,7 @@ class MemberServiceTest {
 		SignUpRequest request = signUpRequest();
 		doReturn(Optional.of(request.toEntity())).when(memberRepository).findByNickname(request.getNickname());
 		//when
-		MemberException exception = assertThrows(MemberException.class, () -> memberService.signup(request));
+		MemberException exception = assertThrows(MemberException.class, () -> memberService.signUp(request));
 
 		//then
 		assertThat(exception.getErrorCode()).isEqualTo(MemberErrorCode.NICKNAME_ALREADY_EXIST);
@@ -105,7 +105,7 @@ class MemberServiceTest {
 		doReturn(Optional.of(member)).when(memberRepository).findByEmail(logInRequest.getEmail());
 
 	    //when
-		Long loginMemberId = memberService.login(logInRequest);
+		Long loginMemberId = memberService.logIn(logInRequest);
 
 		//then
 		assertThat(loginMemberId).isEqualTo(1L);
@@ -119,7 +119,7 @@ class MemberServiceTest {
 		doReturn(Optional.empty()).when(memberRepository).findByEmail(logInRequest.getEmail());
 
 		//when
-		MemberException exception = assertThrows(MemberException.class, () -> memberService.login(logInRequest));
+		MemberException exception = assertThrows(MemberException.class, () -> memberService.logIn(logInRequest));
 
 		//then
 		assertThat(exception.getErrorCode()).isEqualTo(MemberErrorCode.MEMBER_NOT_FOUND);

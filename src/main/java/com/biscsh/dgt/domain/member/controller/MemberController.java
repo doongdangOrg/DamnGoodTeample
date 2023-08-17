@@ -23,17 +23,17 @@ public class MemberController {
 	private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 	@PostMapping("/signup")
-	public ResponseEntity<Boolean> signup (@RequestBody SignUpRequest signUpRequest){
+	public ResponseEntity<Boolean> signUp(@RequestBody SignUpRequest signUpRequest){
 		signUpRequest.setPassword(encoder.encode(signUpRequest.getPassword()));
-		Boolean signupSuccess = memberService.signup(signUpRequest);
+		Boolean signupSuccess = memberService.signUp(signUpRequest);
 
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(signupSuccess);
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<Boolean> login(HttpServletRequest servletRequest, @RequestBody LogInRequest logInRequest){
-		Long loginMemberId = memberService.login(logInRequest);
+	public ResponseEntity<Boolean> logIn(HttpServletRequest servletRequest, @RequestBody LogInRequest logInRequest){
+		Long loginMemberId = memberService.logIn(logInRequest);
 
 		HttpSession session = servletRequest.getSession();
 		session.setAttribute("login", loginMemberId);

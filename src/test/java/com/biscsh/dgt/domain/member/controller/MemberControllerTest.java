@@ -58,7 +58,7 @@ class MemberControllerTest {
 		//given
 		SignUpRequest signUpRequest = signUpRequest();
 		doReturn(true).when(memberService)
-			.signup(any(SignUpRequest.class));
+			.signUp(any(SignUpRequest.class));
 		//when
 		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/signup")
 			.contentType(MediaType.APPLICATION_JSON)
@@ -73,7 +73,7 @@ class MemberControllerTest {
 	void test_login_success() throws Exception {
 	    //given
 		LogInRequest request = logInRequest();
-		doReturn(true).when(memberService).login(any(LogInRequest.class));
+		doReturn(true).when(memberService).logIn(any(LogInRequest.class));
 
 		//when
 		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/login")

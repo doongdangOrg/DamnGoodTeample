@@ -19,7 +19,7 @@ public class MemberService {
 	//TODO: 에러처리 필요(현재는 return null)
 	private final MemberRepository memberRepository;
 
-	public boolean signup(SignUpRequest signUpRequest){
+	public boolean signUp(SignUpRequest signUpRequest){
 		//중복 이메일 체크
 		checkDuplicateEmail(signUpRequest.getEmail());
 
@@ -32,7 +32,7 @@ public class MemberService {
 		return true;
 	}
 
-	public Long login(LogInRequest logInRequest){
+	public Long logIn(LogInRequest logInRequest){
 		//이메일을 통한 멤버 조회
 		Member member = getMember(logInRequest.getEmail());
 
