@@ -5,7 +5,7 @@ import static com.biscsh.dgt.domain.member.exception.MemberErrorCode.*;
 import org.springframework.stereotype.Service;
 
 import com.biscsh.dgt.domain.member.domain.Member;
-import com.biscsh.dgt.domain.member.dto.LogInRequest;
+import com.biscsh.dgt.domain.member.dto.SignInRequest;
 import com.biscsh.dgt.domain.member.dto.SignUpRequest;
 import com.biscsh.dgt.domain.member.exception.MemberException;
 import com.biscsh.dgt.domain.member.repository.MemberRepository;
@@ -32,12 +32,12 @@ public class MemberService {
 		return true;
 	}
 
-	public Long logIn(LogInRequest logInRequest){
+	public Long signIn(SignInRequest signInRequest){
 		//이메일을 통한 멤버 조회
-		Member member = getMember(logInRequest.getEmail());
+		Member member = getMember(signInRequest.getEmail());
 
 		//비밀번호 일치 여부 확인
-		checkPassword(logInRequest.getPassword(), member.getPassword());
+		checkPassword(signInRequest.getPassword(), member.getPassword());
 
 		return member.getId();
 	}

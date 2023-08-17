@@ -17,7 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.biscsh.dgt.domain.member.domain.Member;
-import com.biscsh.dgt.domain.member.dto.LogInRequest;
+import com.biscsh.dgt.domain.member.dto.SignInRequest;
 import com.biscsh.dgt.domain.member.dto.SignUpRequest;
 import com.biscsh.dgt.domain.member.exception.MemberErrorCode;
 import com.biscsh.dgt.domain.member.exception.MemberException;
@@ -44,8 +44,8 @@ class MemberServiceTest {
 			.nickname("test")
 			.build();
 	}
-	private LogInRequest logInRequest(){
-		LogInRequest request = LogInRequest.builder()
+	private SignInRequest logInRequest(){
+		SignInRequest request = SignInRequest.builder()
 			.email("test@test.com")
 			.password("1234")
 			.build();
@@ -96,16 +96,16 @@ class MemberServiceTest {
 	@Test
 	void test_login_success (){
 	    //given
-		LogInRequest logInRequest = logInRequest();
+		SignInRequest signInRequest = logInRequest();
 		Member member = new Member.MemberBuilder()
 			.setId(1L)
-			.setEmail(logInRequest.getEmail())
-			.setPassword(logInRequest.getPassword())
+			.setEmail(signInRequest.getEmail())
+			.setPassword(signInRequest.getPassword())
 			.build();
-		doReturn(Optional.of(member)).when(memberRepository).findByEmail(logInRequest.getEmail());
+		doReturn(Optional.of(member)).when(memberRepository).findByEmail(signInRequest.getEmail());
 
 	    //when
-		Long loginMemberId = memberService.logIn(logInRequest);
+		Long loginMemberId = memberService.signIn(signInRequest);
 
 		//then
 		assertThat(loginMemberId).isEqualTo(1L);
@@ -115,11 +115,11 @@ class MemberServiceTest {
 	@Test
 	void test_login_fail_by_Member(){
 	    //given
-	    LogInRequest logInRequest = logInRequest();
-		doReturn(Optional.empty()).when(memberRepository).findByEmail(logInRequest.getEmail());
+	    SignInRequest signInRequest = logInRequest();
+		doReturn(Optional.empty()).when(memberRepository).findByEmail(signInRequest.getEmail());
 
 		//when
-		MemberException exception = assertThrows(MemberException.class, () -> memberService.logIn(logInRequest));
+		MemberException exception = assertThrows(MemberException.class, () -> memberService.signIn(signInRequest));
 
 		//then
 		assertThat(exception.getErrorCode()).isEqualTo(MemberErrorCode.MEMBER_NOT_FOUND);
@@ -129,16 +129,16 @@ class MemberServiceTest {
 	@Test
 	void test_login_fail_by_password(){
 	    //given
-		LogInRequest logInRequest = logInRequest();
+		SignInRequest signInRequest = logInRequest();
 		Member member = new Member.MemberBuilder()
 			.setId(1L)
-			.setEmail(logInRequest.getEmail())
-			.setPassword(encoder.encode(logInRequest.getPassword()+"1"))
+			.setEmail(signInRequest.getEmail())
+			.setPassword(encoder.encode(signInRequest.getPassword()+"1"))
 			.build();
 		//when
 
 	    //then
-		assertThat(encoder.matches(logInRequest.getPassword(), member.getPassword())).isFalse();
+		assertThat(encoder.matches(signInRequest.getPassword(), member.getPassword())).isFalse();
 
 	}
 

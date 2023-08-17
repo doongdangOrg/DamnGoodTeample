@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.biscsh.dgt.domain.member.dto.LogInRequest;
+import com.biscsh.dgt.domain.member.dto.SignInRequest;
 import com.biscsh.dgt.domain.member.dto.SignUpRequest;
 import com.biscsh.dgt.domain.member.service.MemberService;
 
@@ -31,12 +31,12 @@ public class MemberController {
 			.body(signupSuccess);
 	}
 
-	@PostMapping("/login")
-	public ResponseEntity<Boolean> logIn(HttpServletRequest servletRequest, @RequestBody LogInRequest logInRequest){
-		Long loginMemberId = memberService.logIn(logInRequest);
+	@PostMapping("/signin")
+	public ResponseEntity<Boolean> signIn(HttpServletRequest servletRequest, @RequestBody SignInRequest signInRequest){
+		Long signInMemberId = memberService.signIn(signInRequest);
 
 		HttpSession session = servletRequest.getSession();
-		session.setAttribute("login", loginMemberId);
+		session.setAttribute("signIn", signInMemberId);
 		session.setMaxInactiveInterval(1800);
 
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);

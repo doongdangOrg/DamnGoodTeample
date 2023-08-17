@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.biscsh.dgt.domain.member.dto.LogInRequest;
+import com.biscsh.dgt.domain.member.dto.SignInRequest;
 import com.biscsh.dgt.domain.member.dto.SignUpRequest;
 import com.biscsh.dgt.domain.member.service.MemberService;
 import com.google.gson.Gson;
@@ -44,8 +44,8 @@ class MemberControllerTest {
 			.build();
 	}
 
-	private LogInRequest logInRequest(){
-		LogInRequest request = LogInRequest.builder()
+	private SignInRequest logInRequest(){
+		SignInRequest request = SignInRequest.builder()
 			.email("test@test.com")
 			.password("1234")
 			.build();
@@ -72,8 +72,8 @@ class MemberControllerTest {
 	@Test
 	void test_login_success() throws Exception {
 	    //given
-		LogInRequest request = logInRequest();
-		doReturn(true).when(memberService).logIn(any(LogInRequest.class));
+		SignInRequest request = logInRequest();
+		doReturn(true).when(memberService).signIn(any(SignInRequest.class));
 
 		//when
 		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/login")
