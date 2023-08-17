@@ -26,16 +26,18 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
     implementation 'org.flywaydb:flyway-core'
     implementation 'org.flywaydb:flyway-mysql'
     implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
+
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
     implementation 'com.google.code.gson:gson:2.10.1'
     // HttpRequest, HttpResponse 정보 로깅
     implementation 'dev.akkinoc.spring.boot:logback-access-spring-boot-starter:4.0.0'
     // guava 테스트 및 카멜,스네이크 케이스 및 규격 통일성 맞추기 위해 유틸 이용
     implementation 'com.google.guava:guava:32.1.1-jre'
-
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
