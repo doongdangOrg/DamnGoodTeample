@@ -1,7 +1,7 @@
 package com.biscsh.dgt.domain.post.service;
 
 import com.biscsh.dgt.domain.post.dao.PostRepository;
-import com.biscsh.dgt.domain.post.domain.Post;
+import com.biscsh.dgt.domain.post.domain.RecruitPost;
 import com.biscsh.dgt.domain.post.dto.PostRequest;
 import com.biscsh.dgt.domain.post.dto.PostResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -15,12 +15,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static com.biscsh.dgt.domain.post.PostData.postRequest;
 import static com.biscsh.dgt.domain.post.PostData.postResponse;
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
-class PostServiceTest {
+class RecruitPostServiceTest {
     @InjectMocks
     private PostService postService;
 
@@ -33,8 +32,8 @@ class PostServiceTest {
         // given
         PostRequest request = postRequest();
         PostResponse response = postResponse();
-        lenient().when(postRepository.save(any(Post.class)))
-                .thenReturn(Post.builder()
+        lenient().when(postRepository.save(any(RecruitPost.class)))
+                .thenReturn(RecruitPost.builder()
                         .id(1L)
                         .title(request.getTitle())
                         .article(request.getArticle())

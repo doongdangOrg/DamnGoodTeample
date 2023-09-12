@@ -1,6 +1,7 @@
 package com.biscsh.dgt.domain.post.dto;
 
 import com.biscsh.dgt.domain.post.domain.Post;
+import com.biscsh.dgt.domain.post.domain.RecruitPost;
 import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

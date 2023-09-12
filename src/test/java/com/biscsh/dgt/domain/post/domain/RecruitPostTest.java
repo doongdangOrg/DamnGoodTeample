@@ -15,7 +15,7 @@ import static com.biscsh.dgt.domain.post.PostData.postRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-class PostTest {
+class RecruitPostTest {
 
     private Validator validator = null;
 
@@ -28,9 +28,9 @@ class PostTest {
     @DisplayName("공고 생성 시 validation 잘 동작하는지 테스트")
     public void validate_create_post() throws Exception {
         //given
-        Post post = Post.of(postRequest(), 1L);
+        RecruitPost recruitPost = RecruitPost.of(postRequest(), 1L);
         //when
-        Set<ConstraintViolation<Post>> violations = validator.validate(post);
+        Set<ConstraintViolation<RecruitPost>> violations = validator.validate(recruitPost);
         //then
 //        violations.forEach((System.out::println));
         assertEquals(1, violations.size());

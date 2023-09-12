@@ -42,8 +42,7 @@ public class ActivatePeriod {
         return activatePeriod;
     }
 
-    private void calcDuration() {
+    public void calcDuration() {
         duration = Duration.between(start, end);
-
     }
 }

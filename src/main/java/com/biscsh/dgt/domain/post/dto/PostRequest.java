@@ -1,6 +1,7 @@
 package com.biscsh.dgt.domain.post.dto;
 
 import com.biscsh.dgt.domain.post.domain.ActivatePeriod;
+import com.biscsh.dgt.domain.post.domain.Post;
 import com.biscsh.dgt.domain.post.domain.RecruitPeriod;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,19 +25,16 @@ public class PostRequest {
     @ToString.Include
     private String article;
 
-    @ToString.Include
-    @PositiveOrZero
-    private int recruitCnt;
+//    @PositiveOrZero
+//    @ToString.Include
+//    private int viewCnt;
 
-    // TODO: 객체 구현해야 함 (시작일 - 종료일 , 대략적인 날짜(int))
-    // 시작일 - 종료일 (선택시)-> 대략적인 날짜를 계산해서 저장함(3개월).
-    @ToString.Include
-    private ActivatePeriod activatePeriod;
-
-    @ToString.Include
-    private ActivatePeriod recruitPeriod;
-
-    @ToString.Include
-    private boolean isTest;
+    public Post toEntity() {
+        return Post.builder()
+                .title(title)
+                .article(article)
+//                .viewCnt(viewCnt)
+                .build();
+    }
 
 }
