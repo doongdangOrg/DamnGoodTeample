@@ -24,7 +24,7 @@ public class PostController {
         // TODO: 로그인 완성되면 세션에서 memberId꺼내 쓸 예정
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(postService.createPost(postRequest.toEntity(), 1L));
+                .body(postService.createPost(postRequest.toEntity(1L)));
     }
 
 }

@@ -1,7 +1,9 @@
 package com.biscsh.dgt.domain.post.controller;
 
+import com.biscsh.dgt.domain.post.domain.Post;
 import com.biscsh.dgt.domain.post.dto.PostRequest;
 import com.biscsh.dgt.domain.post.dto.PostResponse;
+import com.biscsh.dgt.domain.post.dto.RecruitPostRequest;
 import com.biscsh.dgt.domain.post.service.PostService;
 import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,9 +47,9 @@ public class RecruitPostControllerTest {
     @DisplayName("컨트롤러 공고 올리기")
     public void postSuccess() throws Exception {
         // given
-        PostRequest request = postRequest();
+        RecruitPostRequest request = postRequest();
         PostResponse response = postResponse();
-        lenient().when(postService.createPost(any(PostRequest.class), any(Long.class)))
+        lenient().when(postService.createPost(any(Post.class)))
                 .thenReturn(response);
         // when
         ResultActions resultActions = mockMvc.perform(

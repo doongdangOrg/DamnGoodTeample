@@ -24,7 +24,7 @@ class RecruitPostRepositoryTest {
     @DisplayName("공고 올리기")
     public void createPost() {
         //given
-        RecruitPost recruitPost = RecruitPost.of(postRequest(), 1L);
+        RecruitPost recruitPost = postRequest().toEntity(1L);
         //when
         RecruitPost savedRecruitPost = postRepository.save(recruitPost);
         //then

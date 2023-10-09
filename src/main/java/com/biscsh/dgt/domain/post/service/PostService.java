@@ -21,8 +21,7 @@ public class PostService {
 
     // TODO: Controller에서 Request받은 뒤 팩토리에 넘겨서 처리 후 서비스에 넘기자
     @Transactional
-    public PostResponse createPost(Post post, Long memberId) {
-
+    public PostResponse createPost(Post post) {
         return PostResponse.of(postRepository.save(post));
     }
 }

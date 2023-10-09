@@ -9,6 +9,8 @@ import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.Hashtable;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
@@ -29,8 +31,9 @@ public class PostRequest {
 //    @ToString.Include
 //    private int viewCnt;
 
-    public Post toEntity() {
+    public Post toEntity(Long id) {
         return Post.builder()
+                .id(id)
                 .title(title)
                 .article(article)
 //                .viewCnt(viewCnt)

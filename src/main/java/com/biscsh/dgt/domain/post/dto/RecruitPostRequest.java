@@ -5,8 +5,11 @@ import com.biscsh.dgt.domain.post.domain.RecruitPost;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.ToString;
 
+
+@Builder
 public class RecruitPostRequest {
 
     @Size(min = 2, max = 100, message = "제목은 최소 2글자 ~ 100글자 내로 작성돼야 합니다.")
@@ -32,8 +35,9 @@ public class RecruitPostRequest {
     @ToString.Include
     private boolean isTest;
 
-    public RecruitPost toEntity() {
+    public RecruitPost toEntity(Long id) {
         return RecruitPost.builder()
+                .id(id)
                 .title(title)
                 .article(article)
                 .recruitCnt(recruitCnt)

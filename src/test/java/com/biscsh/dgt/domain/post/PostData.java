@@ -3,6 +3,7 @@ package com.biscsh.dgt.domain.post;
 import com.biscsh.dgt.domain.post.domain.ActivatePeriod;
 import com.biscsh.dgt.domain.post.dto.PostRequest;
 import com.biscsh.dgt.domain.post.dto.PostResponse;
+import com.biscsh.dgt.domain.post.dto.RecruitPostRequest;
 
 import java.time.LocalDateTime;
 
@@ -15,8 +16,8 @@ public class PostData {
                 .build();
     }
 
-    public static PostRequest postRequest() {
-        return PostRequest.builder()
+    public static RecruitPostRequest postRequest() {
+        return RecruitPostRequest.builder()
                 .title("공fea")
                 .article("z")
                 .recruitCnt(5)
