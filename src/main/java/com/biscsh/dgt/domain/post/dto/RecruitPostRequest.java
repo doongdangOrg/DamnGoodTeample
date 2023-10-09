@@ -37,7 +37,7 @@ public class RecruitPostRequest {
 
     public RecruitPost toEntity(Long id) {
         return RecruitPost.builder()
-                .id(id)
+                .memberId(id)
                 .title(title)
                 .article(article)
                 .recruitCnt(recruitCnt)

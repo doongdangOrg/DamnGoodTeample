@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @ComponentScan
 @EnableJpaAuditing
 @EnableAutoConfiguration
-class SpringJpaTestConfiguration {
+public class SpringJpaTestConfiguration {
 }

@@ -1,9 +1,11 @@
 package com.biscsh.dgt.domain.post.dao;
 
+import com.biscsh.dgt.SpringJpaTest;
 import com.biscsh.dgt.domain.post.domain.ActivatePeriod;
 import com.biscsh.dgt.domain.post.domain.RecruitPost;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Nested;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -13,8 +15,7 @@ import java.time.LocalDateTime;
 import static com.biscsh.dgt.domain.post.PostData.postRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
-@ActiveProfiles("test")
+@SpringJpaTest
 class RecruitPostRepositoryTest {
 
     @Autowired
@@ -26,8 +27,10 @@ class RecruitPostRepositoryTest {
         //given
         RecruitPost recruitPost = postRequest().toEntity(1L);
         //when
+
         RecruitPost savedRecruitPost = postRepository.save(recruitPost);
         //then
+
         assertThat(savedRecruitPost)
                 .returns("공fea", RecruitPost::getTitle)
                 .returns("z", RecruitPost::getArticle)
