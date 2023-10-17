@@ -73,10 +73,10 @@ class MemberControllerTest {
 	void test_login_success() throws Exception {
 	    //given
 		SignInRequest request = logInRequest();
-		doReturn(true).when(memberService).signIn(any(SignInRequest.class));
+		doReturn(1L).when(memberService).signIn(any(SignInRequest.class));
 
 		//when
-		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/login")
+		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/signin")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(new Gson().toJson(request))
 		);
