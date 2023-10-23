@@ -94,4 +94,15 @@ public class Member {
 		}
 	}
 
+	public void updatePhoneNumber(String phoneNumber){
+		this.phoneNumber = phoneNumber;
+	}
+
+	public void updateNickname(String nickname){
+		this.nickname = nickname;
+	}
+
+	public void updateName(String name){
+		this.name = name;
+	}
 }
