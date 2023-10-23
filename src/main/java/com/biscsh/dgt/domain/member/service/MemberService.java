@@ -2,9 +2,12 @@ package com.biscsh.dgt.domain.member.service;
 
 import static com.biscsh.dgt.domain.member.exception.MemberErrorCode.*;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.biscsh.dgt.domain.member.domain.Member;
+import com.biscsh.dgt.domain.member.dto.InfoUpdateRequest;
 import com.biscsh.dgt.domain.member.dto.SignInRequest;
 import com.biscsh.dgt.domain.member.dto.SignUpRequest;
 import com.biscsh.dgt.domain.member.exception.MemberException;
@@ -16,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberService {
 
-	//TODO: 에러처리 필요(현재는 return null)
 	private final MemberRepository memberRepository;
 
 	public boolean signUp(SignUpRequest signUpRequest){
@@ -42,20 +44,33 @@ public class MemberService {
 		return member.getId();
 	}
 
+	public void updateInfo(Long memberId, InfoUpdateRequest infoUpdateRequest){
+		Member member = getMemberById(memberId);
+		member.updateName(infoUpdateRequest.getName());
+		member.updateNickname(infoUpdateRequest.getNickname());
+		member.updatePhoneNumber(infoUpdateRequest.getPhoneNumber());
+
+		memberRepository.save(member);
+	}
+
+	private Member getMemberById(Long memberId) {
+		return memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
+	}
+
 	private void checkDuplicateEmail(String email){
 		if(memberRepository.findByEmail(email).isPresent()){
 			throw new MemberException(EMAIL_ALREADY_EXIST);
 		}
 	}
 
-	private Member getMember(String email){
-		return memberRepository.findByEmail(email).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
-	}
-
 	private void checkDuplicateNickname(String nickname){
 		if(memberRepository.findByNickname(nickname).isPresent()){
 			throw new MemberException(NICKNAME_ALREADY_EXIST);
 		}
+	}
+
+	private Member getMember(String email){
+		return memberRepository.findByEmail(email).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
 	}
 
 	private void checkPassword(String requestPassword, String memberPassword){
