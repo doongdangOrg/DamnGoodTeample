@@ -31,9 +31,9 @@ public class PostRequest {
 //    @ToString.Include
 //    private int viewCnt;
 
-    public Post toEntity(Long id) {
+    public Post toEntity(Long memberId) {
         return Post.builder()
-                .id(id)
+                .memberId(memberId)
                 .title(title)
                 .article(article)
 //                .viewCnt(viewCnt)

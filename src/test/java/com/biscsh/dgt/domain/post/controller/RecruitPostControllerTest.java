@@ -1,8 +1,7 @@
 package com.biscsh.dgt.domain.post.controller;
 
 import com.biscsh.dgt.domain.post.domain.Post;
-import com.biscsh.dgt.domain.post.dto.PostRequest;
-import com.biscsh.dgt.domain.post.dto.PostResponse;
+import com.biscsh.dgt.domain.post.dto.PostIdResponse;
 import com.biscsh.dgt.domain.post.dto.RecruitPostRequest;
 import com.biscsh.dgt.domain.post.service.PostService;
 import com.google.gson.GsonBuilder;
@@ -21,7 +20,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import static com.biscsh.dgt.domain.post.PostData.postRequest;
+import static com.biscsh.dgt.domain.post.PostData.recruitPostRequest;
 import static com.biscsh.dgt.domain.post.PostData.postResponse;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -47,8 +46,8 @@ public class RecruitPostControllerTest {
     @DisplayName("컨트롤러 공고 올리기")
     public void postSuccess() throws Exception {
         // given
-        RecruitPostRequest request = postRequest();
-        PostResponse response = postResponse();
+        RecruitPostRequest request = recruitPostRequest();
+        PostIdResponse response = postResponse();
         lenient().when(postService.createPost(any(Post.class)))
                 .thenReturn(response);
         // when

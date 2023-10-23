@@ -11,7 +11,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import static com.biscsh.dgt.domain.post.PostData.postRequest;
+import static com.biscsh.dgt.domain.post.PostData.recruitPostRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,7 +28,7 @@ class RecruitPostTest {
     @DisplayName("공고 생성 시 validation 잘 동작하는지 테스트")
     public void validate_create_post() throws Exception {
         //given
-        RecruitPost recruitPost = postRequest().toEntity(1L);
+        RecruitPost recruitPost = recruitPostRequest().toEntity(1L);
         //when
         Set<ConstraintViolation<RecruitPost>> violations = validator.validate(recruitPost);
         //then
