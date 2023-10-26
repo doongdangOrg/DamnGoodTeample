@@ -11,11 +11,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.biscsh.dgt.domain.member.dto.InfoUpdateRequest;
 import com.biscsh.dgt.domain.member.dto.SignInRequest;
 import com.biscsh.dgt.domain.member.dto.SignUpRequest;
 import com.biscsh.dgt.domain.member.service.MemberService;
@@ -29,9 +31,13 @@ class MemberControllerTest {
 	@InjectMocks
 	private MemberController memberController;
 
+	private MockHttpSession mockitoSession;
+
+
 	@BeforeEach
 	public void init() {
 		mockMvc = MockMvcBuilders.standaloneSetup(memberController).build();
+		mockitoSession = new MockHttpSession();
 	}
 
 	private SignUpRequest signUpRequest() {
@@ -45,11 +51,14 @@ class MemberControllerTest {
 	}
 
 	private SignInRequest logInRequest(){
-		SignInRequest request = SignInRequest.builder()
+		return SignInRequest.builder()
 			.email("test@test.com")
 			.password("1234")
 			.build();
-		return request;
+	}
+
+	private InfoUpdateRequest infoUpdateRequest(){
+		return new InfoUpdateRequest("updateName", "updateNickname","010-1234-1234");
 	}
 
 	@DisplayName("회원 가입 성공 테스트")
@@ -83,6 +92,40 @@ class MemberControllerTest {
 
 		//then
 		result.andExpect(status().isAccepted());
+	}
+
+	@DisplayName("회원 정보 수정 실패 테스트 - 비 로그인 상태")
+	@Test
+	void test_infoUpdate_fail_not_login() throws Exception {
+	    //given
+		InfoUpdateRequest request = infoUpdateRequest();
+		//when
+		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch("/update")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(new Gson().toJson(request))
+		);
+
+		// then
+		resultActions.andExpect(status().isUnauthorized());
+	}
+
+	@DisplayName("회원 정보 수정 성공 테스트")
+	@Test
+	void test_infoUpdate_success() throws Exception {
+	    //given
+		InfoUpdateRequest request = infoUpdateRequest();
+
+		mockitoSession.setAttribute("signIn", 1L);
+
+	    //when
+		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch("/update")
+			.session(mockitoSession)
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(new Gson().toJson(request))
+		);
+
+	    //then
+		resultActions.andExpect(status().isCreated());
 	}
 
 }
