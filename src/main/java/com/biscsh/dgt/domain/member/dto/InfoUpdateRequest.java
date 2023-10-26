@@ -1,12 +1,18 @@
 package com.biscsh.dgt.domain.member.dto;
 
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
+@NoArgsConstructor
 public class InfoUpdateRequest {
-	String nickname;
-	String name;
-	String phoneNumber;
+	private String nickname;
+	private String name;
+	private String phoneNumber;
+
+	public InfoUpdateRequest(String nickname, String name, String phoneNumber) {
+		this.nickname = nickname;
+		this.name = name;
+		this.phoneNumber = phoneNumber;
+	}
 }
