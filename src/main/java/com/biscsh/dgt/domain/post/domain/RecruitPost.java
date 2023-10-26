@@ -10,13 +10,12 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@DiscriminatorValue("R")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder
 @Getter
 @ToString(onlyExplicitlyIncluded = true)
-public class RecruitPost extends Post {
+public class RecruitPost {
 
     @PositiveOrZero
     private int recruitCnt;

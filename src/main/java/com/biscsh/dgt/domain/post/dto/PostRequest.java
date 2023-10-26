@@ -1,15 +1,9 @@
 package com.biscsh.dgt.domain.post.dto;
 
-import com.biscsh.dgt.domain.post.domain.ActivatePeriod;
 import com.biscsh.dgt.domain.post.domain.Post;
-import com.biscsh.dgt.domain.post.domain.RecruitPeriod;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-
-import java.util.Hashtable;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
