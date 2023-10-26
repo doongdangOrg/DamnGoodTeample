@@ -2,8 +2,6 @@ package com.biscsh.dgt.domain.member.service;
 
 import static com.biscsh.dgt.domain.member.exception.MemberErrorCode.*;
 
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 
 import com.biscsh.dgt.domain.member.domain.Member;
@@ -46,9 +44,18 @@ public class MemberService {
 
 	public void updateInfo(Long memberId, InfoUpdateRequest infoUpdateRequest){
 		Member member = getMemberById(memberId);
-		member.updateName(infoUpdateRequest.getName());
-		member.updateNickname(infoUpdateRequest.getNickname());
-		member.updatePhoneNumber(infoUpdateRequest.getPhoneNumber());
+
+		if(infoUpdateRequest.getName() != null){
+			member.updateName(infoUpdateRequest.getName());
+		}
+
+		if(infoUpdateRequest.getNickname() != null){
+			member.updateNickname(infoUpdateRequest.getNickname());
+		}
+
+		if(infoUpdateRequest.getPhoneNumber() != null){
+			member.updatePhoneNumber(infoUpdateRequest.getPhoneNumber());
+		}
 
 		memberRepository.save(member);
 	}
