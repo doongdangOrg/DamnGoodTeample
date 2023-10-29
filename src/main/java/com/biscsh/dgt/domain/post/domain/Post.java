@@ -1,5 +1,7 @@
 package com.biscsh.dgt.domain.post.domain;
 
+import com.biscsh.dgt.domain.post.domain.post.Article;
+import com.biscsh.dgt.domain.post.domain.post.Title;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -24,12 +26,14 @@ public class Post implements Viewable {
     @NotNull
     private Long memberId;
 
-    @Size(min = 2, max = 100, message = "제목은 최소 2글자 ~ 100글자 내로 작성돼야 합니다.")
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "title", nullable = false, length = 100))
     @ToString.Include
-    private String title;
+    private Title title;
 
-    @Size(max = 4000, message = "4000글자 내로 작성돼야 합니다.")
-    private String article;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "article", length = 4000))
+    private Article article;
 
     private int viewCnt;
 
