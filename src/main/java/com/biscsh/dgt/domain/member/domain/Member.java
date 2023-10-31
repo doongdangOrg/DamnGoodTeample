@@ -10,12 +10,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 public class Member {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,49 +51,6 @@ public class Member {
 		this.nickname = nickname;
 		this.name = name;
 		this.password = password;
-	}
-
-	public static class MemberBuilder {
-		private Long id;
-		private String email;
-		private String phoneNumber;
-		private String nickname;
-		private String name;
-		private String password;
-
-		public MemberBuilder setId(Long id) {
-			this.id = id;
-			return this;
-		}
-
-		public MemberBuilder setEmail(String email){
-			this.email = email;
-			return this;
-		}
-
-		public MemberBuilder setPhoneNumber(String phoneNumber) {
-			this.phoneNumber = phoneNumber;
-			return this;
-		}
-
-		public MemberBuilder setNickname(String nickname) {
-			this.nickname = nickname;
-			return this;
-		}
-
-		public MemberBuilder setName(String name) {
-			this.name = name;
-			return this;
-		}
-
-		public MemberBuilder setPassword(String password) {
-			this.password = password;
-			return this;
-		}
-
-		public Member build() {
-			return new Member(id, email, phoneNumber, nickname, name, password);
-		}
 	}
 
 	public void updatePhoneNumber(String phoneNumber){
