@@ -1,5 +1,6 @@
 package com.biscsh.dgt.domain.member.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ public class InfoUpdateRequest {
 	private String name;
 	private String phoneNumber;
 
+	@Builder
 	public InfoUpdateRequest(String nickname, String name, String phoneNumber) {
 		this.nickname = nickname;
 		this.name = name;
