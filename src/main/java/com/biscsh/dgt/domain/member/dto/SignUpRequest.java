@@ -23,12 +23,12 @@ public class SignUpRequest {
 	}
 
 	public Member toEntity(){
-		return new Member.MemberBuilder()
-			.setEmail(this.getEmail())
-			.setPassword(this.getPassword())
-			.setName(this.getName())
-			.setPhoneNumber(this.getPhoneNumber())
-			.setNickname(this.getNickname())
+		return Member.builder()
+			.email(this.getEmail())
+			.password(this.getPassword())
+			.name(this.getName())
+			.phoneNumber(this.getPhoneNumber())
+			.nickname(this.getNickname())
 			.build();
 	}
 }
