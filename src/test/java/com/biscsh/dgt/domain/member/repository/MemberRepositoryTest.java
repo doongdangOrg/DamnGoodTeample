@@ -18,16 +18,16 @@ class MemberRepositoryTest {
 	private MemberRepository memberRepository;
 
 	private Member member(){
-		return new Member.MemberBuilder()
-			.setName("test")
-			.setNickname("test")
-			.setEmail("test@test.com")
-			.setPassword("1234")
-			.setPhoneNumber("010-1234-2345")
+		return Member.builder()
+			.name("test")
+			.nickname("test")
+			.email("test@test.com")
+			.password("1234")
+			.phoneNumber("010-1234-5678")
 			.build();
 	}
 
-	@DisplayName("회원 저장 성공 테스트")
+	@DisplayName("회원 저장 테스트")
 	@Test
 	void test_signup_success(){
 	    //given
@@ -39,31 +39,46 @@ class MemberRepositoryTest {
 	    //then
 		assertThat(saved.getEmail()).isEqualTo(member.getEmail());
 	}
-	@DisplayName("회원 저장 실패 테스트 - 이메일 중복")
+
+	@DisplayName("회원 이메일 조회 테스트")
 	@Test
-	void test_signup_fail_by_email(){
+	void test_find_by_email(){
 	    //given
-		memberRepository.save(member());
+		Member member = member();
 
 	    //when
-		Member member = member();
-		Optional<Member> find = memberRepository.findByEmail(member.getEmail());
+		memberRepository.save(member);
+		Optional<Member> saved = memberRepository.findByEmail(member.getEmail());
 
 		//then
-		assertThat(find.get().getEmail()).isEqualTo(member.getEmail());
+		assertThat(saved.get().getEmail()).isEqualTo(member.getEmail());
 	}
 
-	@DisplayName("회원 저장 실패 테스트 - 닉네임 중복")
+	@DisplayName("회원 닉네임 조회 테스트")
 	@Test
-	void test_signup_fail_by_nickname(){
+	void test_find_by_nickname(){
 		//given
-		memberRepository.save(member());
+		Member member = member();
 
 		//when
-		Member member = member();
-		Optional<Member> find = memberRepository.findByNickname(member.getNickname());
+		memberRepository.save(member);
+		Optional<Member> saved = memberRepository.findByNickname(member.getNickname());
 
 		//then
-		assertThat(find.get().getNickname()).isEqualTo(member.getNickname());
+		assertThat(saved.get().getNickname()).isEqualTo(member.getNickname());
+	}
+
+	@DisplayName("회원 아이디 조회 테스트")
+	@Test
+	void test_find_by_id(){
+		Member member = member();
+
+		//when
+		Member saved = memberRepository.save(member);
+
+		Optional<Member> memberById = memberRepository.findById(saved.getId());
+
+		//then
+		assertThat(memberById.get().getId()).isEqualTo(saved.getId());
 	}
 }
