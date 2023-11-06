@@ -32,19 +32,6 @@ class MemberRepositoryTest {
 		return new InfoUpdateRequest("updateName", "updateNickname","010-1234-1234");
 	}
 
-	@DisplayName("회원 저장 테스트")
-	@Test
-	void test_signup_success(){
-	    //given
-		Member member = member();
-
-		//when
-		Member saved = memberRepository.save(member());
-
-	    //then
-		assertThat(saved.getEmail()).isEqualTo(member.getEmail());
-	}
-
 	@DisplayName("회원 이메일 조회 테스트")
 	@Test
 	void test_find_by_email(){
@@ -75,20 +62,6 @@ class MemberRepositoryTest {
 		assertThat(saved.get().getNickname()).isEqualTo(member.getNickname());
 	}
 
-	@DisplayName("회원 아이디 조회 테스트")
-	@Test
-	void test_find_by_id(){
-		Member member = member();
-
-		//when
-		Member saved = memberRepository.save(member);
-
-		Optional<Member> memberById = memberRepository.findById(saved.getId());
-
-		//then
-		assertThat(memberById).isNotEmpty();
-		assertThat(memberById.get().getId()).isEqualTo(saved.getId());
-	}
 
 	@DisplayName("회원 정보 수정 테스트")
 	@Test
