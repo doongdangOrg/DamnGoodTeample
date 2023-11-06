@@ -57,7 +57,6 @@ class MemberServiceTest {
 
 	private Member member(){
 		return Member.builder()
-			.id(1L)
 			.email("test@test.com")
 			.password("1234")
 			.nickname("test")
@@ -115,10 +114,10 @@ class MemberServiceTest {
 		doReturn(Optional.of(member)).when(memberRepository).findByEmail(signInRequest.getEmail());
 
 	    //when
-		Long loginMemberId = memberService.signIn(signInRequest);
+		Long signInId = memberService.signIn(signInRequest);
 
 		//then
-		assertThat(loginMemberId).isEqualTo(1L);
+		assertThat(signInId).isEqualTo(null);
 	}
 
 	@DisplayName("로그인 실패 테스트 - 존재하지 않는 사용자")
@@ -141,7 +140,6 @@ class MemberServiceTest {
 	    //given
 		SignInRequest signInRequest = signInRequest();
 		Member member = Member.builder()
-			.id(1L)
 			.email(signInRequest.getEmail())
 			.password(encoder.encode(signInRequest.getPassword()+"1"))
 			.build();
@@ -182,10 +180,12 @@ class MemberServiceTest {
 
 		//when
 		memberService.updateInfo(memberId, request);
+		Optional<Member> updateMember = memberRepository.findById(memberId);
 
 		//then
-		verify(memberRepository, times(1)).findById(anyLong());
+		verify(memberRepository, times(2)).findById(anyLong());
 		verify(memberRepository, times(1)).save(any(Member.class));
-	}
+		assertThat(updateMember.get().getNickname()).isEqualTo(request.getNickname());
 
+	}
 }
