@@ -1,6 +1,7 @@
 package com.biscsh.dgt.domain.member.controller;
 
 import static org.mockito.BDDMockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +18,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.biscsh.dgt.domain.member.domain.Member;
 import com.biscsh.dgt.domain.member.dto.InfoUpdateRequest;
 import com.biscsh.dgt.domain.member.dto.SignInRequest;
 import com.biscsh.dgt.domain.member.dto.SignUpRequest;
@@ -54,6 +56,16 @@ class MemberControllerTest {
 		return SignInRequest.builder()
 			.email("test@test.com")
 			.password("1234")
+			.build();
+	}
+
+	private Member member(){
+		return Member.builder()
+			.email("test@test.com")
+			.password("1234")
+			.nickname("test")
+			.name("test")
+			.phoneNumber("010-1234-5678")
 			.build();
 	}
 
@@ -128,4 +140,27 @@ class MemberControllerTest {
 		resultActions.andExpect(status().isCreated());
 	}
 
+	@DisplayName("회원 정보 조회 테스트")
+	@Test
+	void test_get_info_success() throws Exception {
+	    //given
+		mockitoSession.setAttribute("signIn", 1L);
+
+		Member member = member();
+
+		doReturn(member).when(memberService).getMember(anyLong());
+
+	    //when
+		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/member/info")
+			.session(mockitoSession)
+			.contentType(MediaType.APPLICATION_JSON)
+
+		);
+
+	    //then
+		resultActions.andExpect(status().isOk());
+		resultActions.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+			.andDo(print());
+
+	}
 }
