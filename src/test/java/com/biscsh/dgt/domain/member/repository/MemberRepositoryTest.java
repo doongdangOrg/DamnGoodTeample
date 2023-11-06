@@ -56,6 +56,7 @@ class MemberRepositoryTest {
 		Optional<Member> saved = memberRepository.findByEmail(member.getEmail());
 
 		//then
+		assertThat(saved).isNotEmpty();
 		assertThat(saved.get().getEmail()).isEqualTo(member.getEmail());
 	}
 
@@ -70,6 +71,7 @@ class MemberRepositoryTest {
 		Optional<Member> saved = memberRepository.findByNickname(member.getNickname());
 
 		//then
+		assertThat(saved).isNotEmpty();
 		assertThat(saved.get().getNickname()).isEqualTo(member.getNickname());
 	}
 
@@ -84,6 +86,7 @@ class MemberRepositoryTest {
 		Optional<Member> memberById = memberRepository.findById(saved.getId());
 
 		//then
+		assertThat(memberById).isNotEmpty();
 		assertThat(memberById.get().getId()).isEqualTo(saved.getId());
 	}
 
@@ -106,6 +109,7 @@ class MemberRepositoryTest {
 		Optional<Member> updated = memberRepository.findByEmail(saved.getEmail());
 
 		//then
+		assertThat(updated).isNotEmpty();
 		assertThat(updated.get().getName()).isEqualTo(infoUpdateRequest.getName());
 		assertThat(updated.get().getNickname()).isEqualTo(infoUpdateRequest.getNickname());
 		assertThat(updated.get().getPhoneNumber()).isEqualTo(infoUpdateRequest.getPhoneNumber());
