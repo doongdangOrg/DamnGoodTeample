@@ -69,7 +69,7 @@ class MemberControllerTest {
 		doReturn(true).when(memberService)
 			.signUp(any(SignUpRequest.class));
 		//when
-		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/signup")
+		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/member/signup")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(new Gson().toJson(signUpRequest)));
 		//then
@@ -85,7 +85,7 @@ class MemberControllerTest {
 		doReturn(1L).when(memberService).signIn(any(SignInRequest.class));
 
 		//when
-		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/signin")
+		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/member/signin")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(new Gson().toJson(request))
 		);
@@ -100,7 +100,7 @@ class MemberControllerTest {
 	    //given
 		InfoUpdateRequest request = infoUpdateRequest();
 		//when
-		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch("/update")
+		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch("/member/update")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(new Gson().toJson(request))
 		);
@@ -118,7 +118,7 @@ class MemberControllerTest {
 		mockitoSession.setAttribute("signIn", 1L);
 
 	    //when
-		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch("/update")
+		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch("/member/update")
 			.session(mockitoSession)
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(new Gson().toJson(request))
