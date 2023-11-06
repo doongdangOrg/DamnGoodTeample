@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import com.biscsh.dgt.domain.member.domain.Member;
+import com.biscsh.dgt.domain.member.dto.InfoUpdateRequest;
 
 @DataJpaTest
 class MemberRepositoryTest {
@@ -25,6 +26,10 @@ class MemberRepositoryTest {
 			.password("1234")
 			.phoneNumber("010-1234-5678")
 			.build();
+	}
+
+	private InfoUpdateRequest infoUpdateRequest(){
+		return new InfoUpdateRequest("updateName", "updateNickname","010-1234-1234");
 	}
 
 	@DisplayName("회원 저장 테스트")
@@ -80,5 +85,29 @@ class MemberRepositoryTest {
 
 		//then
 		assertThat(memberById.get().getId()).isEqualTo(saved.getId());
+	}
+
+	@DisplayName("회원 정보 수정 테스트")
+	@Test
+	void test_update_member(){
+	    //given
+		Member member = member();
+		InfoUpdateRequest infoUpdateRequest = infoUpdateRequest();
+
+	    //when
+		Member saved = memberRepository.save(member);
+
+		saved.updateName(infoUpdateRequest.getName());
+		saved.updateNickname(infoUpdateRequest.getNickname());
+		saved.updatePhoneNumber(infoUpdateRequest.getPhoneNumber());
+
+		memberRepository.save(saved);
+
+		Optional<Member> updated = memberRepository.findByEmail(saved.getEmail());
+
+		//then
+		assertThat(updated.get().getName()).isEqualTo(infoUpdateRequest.getName());
+		assertThat(updated.get().getNickname()).isEqualTo(infoUpdateRequest.getNickname());
+		assertThat(updated.get().getPhoneNumber()).isEqualTo(infoUpdateRequest.getPhoneNumber());
 	}
 }
