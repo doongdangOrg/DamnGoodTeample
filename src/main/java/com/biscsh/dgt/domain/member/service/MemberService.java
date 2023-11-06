@@ -43,7 +43,7 @@ public class MemberService {
 	}
 
 	public void updateInfo(Long memberId, InfoUpdateRequest infoUpdateRequest){
-		Member member = getMemberById(memberId);
+		Member member = getMember(memberId);
 
 		if(infoUpdateRequest.getName() != null){
 			member.updateName(infoUpdateRequest.getName());
@@ -60,7 +60,7 @@ public class MemberService {
 		memberRepository.save(member);
 	}
 
-	private Member getMemberById(Long memberId) {
+	public Member getMember(Long memberId) {
 		return memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
 	}
 
