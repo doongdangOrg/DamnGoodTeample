@@ -52,7 +52,7 @@ class MemberControllerTest {
 			.build();
 	}
 
-	private SignInRequest logInRequest(){
+	private SignInRequest signInRequest(){
 		return SignInRequest.builder()
 			.email("test@test.com")
 			.password("1234")
@@ -91,9 +91,9 @@ class MemberControllerTest {
 
 	@DisplayName("로그인 성공 테스트")
 	@Test
-	void test_login_success() throws Exception {
+	void test_sign_in_success() throws Exception {
 	    //given
-		SignInRequest request = logInRequest();
+		SignInRequest request = signInRequest();
 		doReturn(1L).when(memberService).signIn(any(SignInRequest.class));
 
 		//when
@@ -108,7 +108,7 @@ class MemberControllerTest {
 
 	@DisplayName("회원 정보 수정 실패 테스트 - 비 로그인 상태")
 	@Test
-	void test_infoUpdate_fail_not_login() throws Exception {
+	void test_infoUpdate_fail_not_sign_in() throws Exception {
 	    //given
 		InfoUpdateRequest request = infoUpdateRequest();
 		//when
@@ -161,6 +161,7 @@ class MemberControllerTest {
 		resultActions.andExpect(status().isOk());
 		resultActions.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andDo(print());
-
 	}
+
+
 }

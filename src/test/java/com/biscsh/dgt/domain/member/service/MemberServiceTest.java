@@ -107,7 +107,7 @@ class MemberServiceTest {
 
 	@DisplayName("로그인 성공 테스트")
 	@Test
-	void test_login_success (){
+	void test_sign_in_success (){
 	    //given
 		SignInRequest signInRequest = signInRequest();
 		Member member = member();
@@ -122,7 +122,7 @@ class MemberServiceTest {
 
 	@DisplayName("로그인 실패 테스트 - 존재하지 않는 사용자")
 	@Test
-	void test_login_fail_by_Member(){
+	void test_sign_in_fail_by_Member(){
 	    //given
 	    SignInRequest signInRequest = signInRequest();
 		doReturn(Optional.empty()).when(memberRepository).findByEmail(signInRequest.getEmail());
@@ -136,7 +136,7 @@ class MemberServiceTest {
 
 	@DisplayName("로그인 실패 테스트 - 비밀번호 불일치")
 	@Test
-	void test_login_fail_by_password(){
+	void test_sign_in_fail_by_password(){
 	    //given
 		SignInRequest signInRequest = signInRequest();
 		Member member = Member.builder()
