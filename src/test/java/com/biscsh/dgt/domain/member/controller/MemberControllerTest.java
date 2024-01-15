@@ -1,5 +1,6 @@
 package com.biscsh.dgt.domain.member.controller;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -163,5 +164,29 @@ class MemberControllerTest {
 			.andDo(print());
 	}
 
+	@DisplayName("로그아웃 성공 테스트")
+	@Test
+	void test_sign_out_success() throws Exception {
+	    //given
+	  	mockitoSession.setAttribute("signIn", 1L);
 
+	    //when
+		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/member/signout").session(mockitoSession));
+
+		//then
+		resultActions.andExpect(status().isOk());
+		assertThat(mockitoSession.isInvalid()).isEqualTo(true);
+	}
+
+	@DisplayName("로그아웃 실패 테스트 - 미 로그인 상태에서 시도")
+	@Test
+	void test_sign_out_fail() throws Exception {
+	    //given
+
+	    //when
+		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/member/signout").session(mockitoSession));
+
+		//then
+		resultActions.andExpect(status().isUnauthorized());
+	}
 }
