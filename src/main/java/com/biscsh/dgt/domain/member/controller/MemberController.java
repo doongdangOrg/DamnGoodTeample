@@ -52,10 +52,10 @@ public class MemberController {
 	@PatchMapping("/update")
 	public ResponseEntity<Boolean> update(HttpSession session, @RequestBody InfoUpdateRequest infoUpdateRequest){
 
-		 //FIXME getLoginMemberId와 service계층에서 터질 수 있는 에러는 다르다.별도의 처리가 추후 필요함.
+		 //FIXME getSignInMemberId와 service계층에서 터질 수 있는 에러는 다르다.별도의 처리가 추후 필요함.
 		try {
-			Long loginMemberId = getLoginMemberId(session);
-			memberService.updateInfo(loginMemberId, infoUpdateRequest);
+			Long signInMemberId = getSignInMemberId(session);
+			memberService.updateInfo(signInMemberId, infoUpdateRequest);
 		}catch (Exception e){
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false);
 		}
@@ -65,13 +65,13 @@ public class MemberController {
 
 	@GetMapping("/info")
 	public ResponseEntity<Member> info(HttpSession session){
-		Long loginMemberId = null;
+		Long signInMemberId = null;
 		Member member = null;
 
-		//FIXME getLoginMemberId와 service계층에서 터질 수 있는 에러는 다르다.별도의 처리가 추후 필요함.
+		//FIXME getSignInMemberId와 service계층에서 터질 수 있는 에러는 다르다.별도의 처리가 추후 필요함.
 		try{
-			loginMemberId = getLoginMemberId(session);
-			member = memberService.getMember(loginMemberId);
+			signInMemberId = getSignInMemberId(session);
+			member = memberService.getMember(signInMemberId);
 		}catch (Exception e){
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 		}
@@ -81,22 +81,22 @@ public class MemberController {
 
 	@DeleteMapping
 	public ResponseEntity<Void> delete (HttpSession session) {
-		Long loginMemberId = null;
+		Long signInMemberId = null;
 
-		loginMemberId = getLoginMemberId(session);
+		signInMemberId = getSignInMemberId(session);
 
 		session.invalidate();
-		memberService.delete(loginMemberId);
+		memberService.delete(signInMemberId);
 
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 
-	private Long getLoginMemberId(HttpSession session){
+	private Long getSignInMemberId(HttpSession session){
 		Long memberId = (Long)session.getAttribute("signIn");
 
 		if(memberId == null){
-			throw new MemberException(MemberErrorCode.NOT_LOGGED_IN);
+			throw new MemberException(MemberErrorCode.NOT_SIGN_IN);
 		}
 
 		return memberId;
