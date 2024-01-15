@@ -1,6 +1,7 @@
 package com.biscsh.dgt.domain.member.controller;
 
-import org.springframework.http.HttpStatus;
+import static org.springframework.http.HttpStatus.*;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,7 +36,7 @@ public class MemberController {
 		signUpRequest.setPassword(encoder.encode(signUpRequest.getPassword()));
 		Boolean signupSuccess = memberService.signUp(signUpRequest);
 
-		return ResponseEntity.status(HttpStatus.CREATED)
+		return ResponseEntity.status(CREATED)
 			.body(signupSuccess);
 	}
 
@@ -46,7 +47,16 @@ public class MemberController {
 		session.setAttribute("signIn", signInMemberId);
 		session.setMaxInactiveInterval(1800);
 
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
+		return ResponseEntity.status(ACCEPTED).body(true);
+	}
+
+	@PostMapping("/signout")
+	public ResponseEntity<Object> signOut(HttpSession session){
+		Long signMemberId = getSignInMemberId(session);
+
+		session.invalidate();
+
+		return ResponseEntity.status(OK).build();
 	}
 
 	@PatchMapping("/update")
@@ -57,10 +67,10 @@ public class MemberController {
 			Long signInMemberId = getSignInMemberId(session);
 			memberService.updateInfo(signInMemberId, infoUpdateRequest);
 		}catch (Exception e){
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false);
+			return ResponseEntity.status(UNAUTHORIZED).body(false);
 		}
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(true);
+		return ResponseEntity.status(CREATED).body(true);
 	}
 
 	@GetMapping("/info")
@@ -73,10 +83,10 @@ public class MemberController {
 			signInMemberId = getSignInMemberId(session);
 			member = memberService.getMember(signInMemberId);
 		}catch (Exception e){
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+			return ResponseEntity.status(UNAUTHORIZED).body(null);
 		}
 
-		return ResponseEntity.status(HttpStatus.OK).body(member);
+		return ResponseEntity.status(OK).body(member);
 	}
 
 	@DeleteMapping
@@ -88,7 +98,7 @@ public class MemberController {
 		session.invalidate();
 		memberService.delete(signInMemberId);
 
-		return ResponseEntity.status(HttpStatus.OK).build();
+		return ResponseEntity.status(OK).build();
 	}
 
 
