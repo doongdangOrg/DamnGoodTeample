@@ -52,8 +52,11 @@ public class MemberController {
 
 	@PostMapping("/signout")
 	public ResponseEntity<Object> signOut(HttpSession session){
-		Long signMemberId = getSignInMemberId(session);
-
+		try {
+			Long signMemberId = getSignInMemberId(session);
+		}catch (Exception e){
+			return ResponseEntity.status(UNAUTHORIZED).body(false);
+		}
 		session.invalidate();
 
 		return ResponseEntity.status(OK).build();
