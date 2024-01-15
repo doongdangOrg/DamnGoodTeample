@@ -87,4 +87,20 @@ class MemberRepositoryTest {
 		assertThat(updated.get().getNickname()).isEqualTo(infoUpdateRequest.getNickname());
 		assertThat(updated.get().getPhoneNumber()).isEqualTo(infoUpdateRequest.getPhoneNumber());
 	}
+
+	@DisplayName("회원 id로 회원 삭제 테스트")
+	@Test
+	void test_delete_member_by_id(){
+	    //given
+		Member member = member();
+
+		//when
+		Member saved = memberRepository.save(member);
+		memberRepository.deleteMemberById(saved.getId());
+
+		Optional<Member> deleted = memberRepository.findById(saved.getId());
+
+		//then
+		assertThat(deleted).isEmpty();
+	}
 }
