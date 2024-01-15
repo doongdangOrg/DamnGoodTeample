@@ -64,6 +64,10 @@ public class MemberService {
 		return memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
 	}
 
+	public void delete(Long loginMemberId) {
+		memberRepository.deleteMemberById(loginMemberId);
+	}
+
 	private void checkDuplicateEmail(String email){
 		if(memberRepository.findByEmail(email).isPresent()){
 			throw new MemberException(EMAIL_ALREADY_EXIST);

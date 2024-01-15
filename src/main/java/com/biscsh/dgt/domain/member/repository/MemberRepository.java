@@ -9,4 +9,5 @@ import com.biscsh.dgt.domain.member.domain.Member;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 	Optional<Member> findByEmail(String email);
 	Optional<Member> findByNickname(String nickname);
+	void deleteMemberById(Long memberId);
 }
