@@ -85,6 +85,7 @@ public class MemberController {
 
 		loginMemberId = getLoginMemberId(session);
 
+		session.invalidate();
 		memberService.delete(loginMemberId);
 
 		return ResponseEntity.status(HttpStatus.OK).build();
