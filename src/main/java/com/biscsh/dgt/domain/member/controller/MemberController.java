@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/member")
+@RequestMapping("/members")
 public class MemberController {
 
 	private final MemberService memberService;
@@ -62,7 +62,7 @@ public class MemberController {
 		return ResponseEntity.status(OK).build();
 	}
 
-	@PatchMapping("/update")
+	@PatchMapping("/info")
 	public ResponseEntity<Boolean> update(HttpSession session, @RequestBody InfoUpdateRequest infoUpdateRequest){
 
 		 //FIXME getSignInMemberId와 service계층에서 터질 수 있는 에러는 다르다.별도의 처리가 추후 필요함.
