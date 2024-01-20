@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.biscsh.dgt.config.signin.SignInInterceptor;
 import com.biscsh.dgt.domain.member.domain.Member;
 import com.biscsh.dgt.domain.member.dto.InfoUpdateRequest;
 import com.biscsh.dgt.domain.member.dto.SignInRequest;
@@ -38,7 +39,9 @@ class MemberControllerTest {
 
 	@BeforeEach
 	public void init() {
-		mockMvc = MockMvcBuilders.standaloneSetup(memberController).build();
+		mockMvc = MockMvcBuilders.standaloneSetup(memberController)
+				.addInterceptors(new SignInInterceptor())
+				.build();
 		mockitoSession = new MockHttpSession();
 	}
 
@@ -160,6 +163,22 @@ class MemberControllerTest {
 		resultActions.andExpect(status().isOk());
 		resultActions.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andDo(print());
+	}
+
+	@DisplayName("회원 정보 조회 실패 테스트")
+	@Test
+	void test_get_info_fail() throws Exception {
+		//given
+
+		//when
+		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/members/info")
+				.session(mockitoSession)
+				.contentType(MediaType.APPLICATION_JSON)
+
+		);
+
+		//then
+		resultActions.andExpect(status().isUnauthorized());
 	}
 
 	@DisplayName("로그아웃 성공 테스트")
