@@ -10,11 +10,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mindrot.jbcrypt.BCrypt;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.biscsh.dgt.domain.member.domain.Member;
 import com.biscsh.dgt.domain.member.dto.InfoUpdateRequest;
@@ -26,19 +25,16 @@ import com.biscsh.dgt.domain.member.repository.MemberRepository;
 
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
-
 	@Mock
 	private MemberRepository memberRepository;
 
 	@InjectMocks
 	private MemberService memberService;
 
-	private final PasswordEncoder encoder = new BCryptPasswordEncoder();
-
 	private SignUpRequest signUpRequest() {
 		return SignUpRequest.builder()
 				.email("test@test.com")
-				.password("1234")
+				.password(BCrypt.hashpw("1234", BCrypt.gensalt()))
 				.name("test")
 				.phoneNumber("010-1234-5678")
 				.nickname("test")
@@ -58,8 +54,9 @@ class MemberServiceTest {
 
 	private Member member() {
 		return Member.builder()
+				.id(1L)
 				.email("test@test.com")
-				.password("1234")
+				.password(BCrypt.hashpw("1234", BCrypt.gensalt()))
 				.nickname("test")
 				.name("test")
 				.phoneNumber("010-1234-5678")
@@ -118,7 +115,7 @@ class MemberServiceTest {
 		Long signInId = memberService.signIn(signInRequest);
 
 		//then
-		assertThat(signInId).isEqualTo(null);
+		assertThat(signInId).isEqualTo(member.getId());
 	}
 
 	@DisplayName("로그인 실패 테스트 - 존재하지 않는 사용자")
@@ -142,12 +139,12 @@ class MemberServiceTest {
 		SignInRequest signInRequest = signInRequest();
 		Member member = Member.builder()
 				.email(signInRequest.getEmail())
-				.password(encoder.encode(signInRequest.getPassword() + "1"))
+				.password(BCrypt.hashpw(signInRequest.getPassword() + "1", BCrypt.gensalt()))
 				.build();
 		//when
 
 		//then
-		assertThat(encoder.matches(signInRequest.getPassword(), member.getPassword())).isFalse();
+		assertThat(BCrypt.checkpw(signInRequest.getPassword(), member.getPassword())).isFalse();
 	}
 
 	@DisplayName("회원정보 수정 실패 테스트 - 멤버가 존재하지 않는 경우")
