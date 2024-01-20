@@ -19,7 +19,7 @@ public class MemberService {
 
 	private final MemberRepository memberRepository;
 
-	public boolean signUp(SignUpRequest signUpRequest){
+	public boolean signUp(SignUpRequest signUpRequest) {
 		//중복 이메일 체크
 		checkDuplicateEmail(signUpRequest.getEmail());
 
@@ -32,7 +32,7 @@ public class MemberService {
 		return true;
 	}
 
-	public Long signIn(SignInRequest signInRequest){
+	public Long signIn(SignInRequest signInRequest) {
 		//이메일을 통한 멤버 조회
 		Member member = getMember(signInRequest.getEmail());
 
@@ -42,18 +42,18 @@ public class MemberService {
 		return member.getId();
 	}
 
-	public void updateInfo(Long memberId, InfoUpdateRequest infoUpdateRequest){
+	public void updateInfo(Long memberId, InfoUpdateRequest infoUpdateRequest) {
 		Member member = getMember(memberId);
 
-		if(infoUpdateRequest.getName() != null){
+		if (infoUpdateRequest.getName() != null) {
 			member.updateName(infoUpdateRequest.getName());
 		}
 
-		if(infoUpdateRequest.getNickname() != null){
+		if (infoUpdateRequest.getNickname() != null) {
 			member.updateNickname(infoUpdateRequest.getNickname());
 		}
 
-		if(infoUpdateRequest.getPhoneNumber() != null){
+		if (infoUpdateRequest.getPhoneNumber() != null) {
 			member.updatePhoneNumber(infoUpdateRequest.getPhoneNumber());
 		}
 
@@ -68,24 +68,24 @@ public class MemberService {
 		memberRepository.deleteMemberById(signInMemberId);
 	}
 
-	private void checkDuplicateEmail(String email){
-		if(memberRepository.findByEmail(email).isPresent()){
+	private void checkDuplicateEmail(String email) {
+		if (memberRepository.findByEmail(email).isPresent()) {
 			throw new MemberException(EMAIL_ALREADY_EXIST);
 		}
 	}
 
-	private void checkDuplicateNickname(String nickname){
-		if(memberRepository.findByNickname(nickname).isPresent()){
+	private void checkDuplicateNickname(String nickname) {
+		if (memberRepository.findByNickname(nickname).isPresent()) {
 			throw new MemberException(NICKNAME_ALREADY_EXIST);
 		}
 	}
 
-	private Member getMember(String email){
+	private Member getMember(String email) {
 		return memberRepository.findByEmail(email).orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
 	}
 
-	private void checkPassword(String requestPassword, String memberPassword){
-		if(!requestPassword.equals(memberPassword) ){
+	private void checkPassword(String requestPassword, String memberPassword) {
+		if (!requestPassword.equals(memberPassword)) {
 			throw new MemberException(PASSWORD_UN_MATCH);
 		}
 	}

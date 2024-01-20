@@ -32,16 +32,16 @@ public class MemberController {
 	private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 	@PostMapping("/signup")
-	public ResponseEntity<Boolean> signUp(@RequestBody SignUpRequest signUpRequest){
+	public ResponseEntity<Boolean> signUp(@RequestBody SignUpRequest signUpRequest) {
 		signUpRequest.setPassword(encoder.encode(signUpRequest.getPassword()));
 		Boolean signupSuccess = memberService.signUp(signUpRequest);
 
 		return ResponseEntity.status(CREATED)
-			.body(signupSuccess);
+				.body(signupSuccess);
 	}
 
 	@PostMapping("/signin")
-	public ResponseEntity<Boolean> signIn(HttpSession session, @RequestBody SignInRequest signInRequest){
+	public ResponseEntity<Boolean> signIn(HttpSession session, @RequestBody SignInRequest signInRequest) {
 		Long signInMemberId = memberService.signIn(signInRequest);
 
 		session.setAttribute("signIn", signInMemberId);
@@ -51,10 +51,10 @@ public class MemberController {
 	}
 
 	@PostMapping("/signout")
-	public ResponseEntity<Object> signOut(HttpSession session){
+	public ResponseEntity<Object> signOut(HttpSession session) {
 		try {
 			Long signMemberId = getSignInMemberId(session);
-		}catch (Exception e){
+		} catch (Exception e) {
 			return ResponseEntity.status(UNAUTHORIZED).body(false);
 		}
 		session.invalidate();
@@ -63,13 +63,13 @@ public class MemberController {
 	}
 
 	@PatchMapping("/info")
-	public ResponseEntity<Boolean> update(HttpSession session, @RequestBody InfoUpdateRequest infoUpdateRequest){
+	public ResponseEntity<Boolean> update(HttpSession session, @RequestBody InfoUpdateRequest infoUpdateRequest) {
 
-		 //FIXME getSignInMemberId와 service계층에서 터질 수 있는 에러는 다르다.별도의 처리가 추후 필요함.
+		//FIXME getSignInMemberId와 service계층에서 터질 수 있는 에러는 다르다.별도의 처리가 추후 필요함.
 		try {
 			Long signInMemberId = getSignInMemberId(session);
 			memberService.updateInfo(signInMemberId, infoUpdateRequest);
-		}catch (Exception e){
+		} catch (Exception e) {
 			return ResponseEntity.status(UNAUTHORIZED).body(false);
 		}
 
@@ -77,15 +77,15 @@ public class MemberController {
 	}
 
 	@GetMapping("/info")
-	public ResponseEntity<Member> info(HttpSession session){
+	public ResponseEntity<Member> info(HttpSession session) {
 		Long signInMemberId = null;
 		Member member = null;
 
 		//FIXME getSignInMemberId와 service계층에서 터질 수 있는 에러는 다르다.별도의 처리가 추후 필요함.
-		try{
+		try {
 			signInMemberId = getSignInMemberId(session);
 			member = memberService.getMember(signInMemberId);
-		}catch (Exception e){
+		} catch (Exception e) {
 			return ResponseEntity.status(UNAUTHORIZED).body(null);
 		}
 
@@ -93,7 +93,7 @@ public class MemberController {
 	}
 
 	@DeleteMapping
-	public ResponseEntity<Void> delete (HttpSession session) {
+	public ResponseEntity<Void> delete(HttpSession session) {
 		Long signInMemberId = null;
 
 		signInMemberId = getSignInMemberId(session);
@@ -104,11 +104,10 @@ public class MemberController {
 		return ResponseEntity.status(OK).build();
 	}
 
-
-	private Long getSignInMemberId(HttpSession session){
+	private Long getSignInMemberId(HttpSession session) {
 		Long memberId = (Long)session.getAttribute("signIn");
 
-		if(memberId == null){
+		if (memberId == null) {
 			throw new MemberException(MemberErrorCode.NOT_SIGN_IN);
 		}
 

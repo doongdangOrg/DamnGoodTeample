@@ -35,43 +35,44 @@ class MemberServiceTest {
 
 	private final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
-
 	private SignUpRequest signUpRequest() {
 		return SignUpRequest.builder()
-			.email("test@test.com")
-			.password("1234")
-			.name("test")
-			.phoneNumber("010-1234-5678")
-			.nickname("test")
-			.build();
-	}
-	private SignInRequest signInRequest(){
-		return SignInRequest.builder()
-			.email("test@test.com")
-			.password("1234")
-			.build();
-	}
-	private InfoUpdateRequest infoUpdateRequest(){
-		return new InfoUpdateRequest("updateName", "updateNickname","010-1234-1234");
+				.email("test@test.com")
+				.password("1234")
+				.name("test")
+				.phoneNumber("010-1234-5678")
+				.nickname("test")
+				.build();
 	}
 
-	private Member member(){
+	private SignInRequest signInRequest() {
+		return SignInRequest.builder()
+				.email("test@test.com")
+				.password("1234")
+				.build();
+	}
+
+	private InfoUpdateRequest infoUpdateRequest() {
+		return new InfoUpdateRequest("updateName", "updateNickname", "010-1234-1234");
+	}
+
+	private Member member() {
 		return Member.builder()
-			.email("test@test.com")
-			.password("1234")
-			.nickname("test")
-			.name("test")
-			.phoneNumber("010-1234-5678")
-			.build();
+				.email("test@test.com")
+				.password("1234")
+				.nickname("test")
+				.name("test")
+				.phoneNumber("010-1234-5678")
+				.build();
 	}
 
 	@DisplayName("회원가입 성공 테스트")
 	@Test
-	void test_signup_success(){
-	    //given
+	void test_signup_success() {
+		//given
 		SignUpRequest request = signUpRequest();
 		doReturn(request.toEntity()).when(memberRepository).save(any(Member.class));
-	    //when
+		//when
 		Boolean response = memberService.signUp(request);
 
 		//then
@@ -81,8 +82,8 @@ class MemberServiceTest {
 
 	@DisplayName("회원가입 실패 테스트 - 이메일 중복")
 	@Test
-	void test_signup_fail_by_email(){
-	    //given
+	void test_signup_fail_by_email() {
+		//given
 		SignUpRequest request = signUpRequest();
 		doReturn(Optional.of(request.toEntity())).when(memberRepository).findByEmail(request.getEmail());
 		//when
@@ -94,7 +95,7 @@ class MemberServiceTest {
 
 	@DisplayName("회원가입 실패 테스트 - 닉네임 중복")
 	@Test
-	void test_signup_fail_by_nickname(){
+	void test_signup_fail_by_nickname() {
 		//given
 		SignUpRequest request = signUpRequest();
 		doReturn(Optional.of(request.toEntity())).when(memberRepository).findByNickname(request.getNickname());
@@ -107,13 +108,13 @@ class MemberServiceTest {
 
 	@DisplayName("로그인 성공 테스트")
 	@Test
-	void test_sign_in_success (){
-	    //given
+	void test_sign_in_success() {
+		//given
 		SignInRequest signInRequest = signInRequest();
 		Member member = member();
 		doReturn(Optional.of(member)).when(memberRepository).findByEmail(signInRequest.getEmail());
 
-	    //when
+		//when
 		Long signInId = memberService.signIn(signInRequest);
 
 		//then
@@ -122,9 +123,9 @@ class MemberServiceTest {
 
 	@DisplayName("로그인 실패 테스트 - 존재하지 않는 사용자")
 	@Test
-	void test_sign_in_fail_by_Member(){
-	    //given
-	    SignInRequest signInRequest = signInRequest();
+	void test_sign_in_fail_by_Member() {
+		//given
+		SignInRequest signInRequest = signInRequest();
 		doReturn(Optional.empty()).when(memberRepository).findByEmail(signInRequest.getEmail());
 
 		//when
@@ -136,41 +137,40 @@ class MemberServiceTest {
 
 	@DisplayName("로그인 실패 테스트 - 비밀번호 불일치")
 	@Test
-	void test_sign_in_fail_by_password(){
-	    //given
+	void test_sign_in_fail_by_password() {
+		//given
 		SignInRequest signInRequest = signInRequest();
 		Member member = Member.builder()
-			.email(signInRequest.getEmail())
-			.password(encoder.encode(signInRequest.getPassword()+"1"))
-			.build();
+				.email(signInRequest.getEmail())
+				.password(encoder.encode(signInRequest.getPassword() + "1"))
+				.build();
 		//when
 
-	    //then
+		//then
 		assertThat(encoder.matches(signInRequest.getPassword(), member.getPassword())).isFalse();
 	}
 
 	@DisplayName("회원정보 수정 실패 테스트 - 멤버가 존재하지 않는 경우")
 	@Test
-	//what is ParameterizedTest???
-	void test_info_update_fail_by_no_member(){
-	    //given
+		//what is ParameterizedTest???
+	void test_info_update_fail_by_no_member() {
+		//given
 		Long memberId = 1L;
 		InfoUpdateRequest request = infoUpdateRequest();
 
 		doThrow(new MemberException(MemberErrorCode.MEMBER_NOT_FOUND)).when(memberRepository).findById(anyLong());
 
-
-	    //when
+		//when
 		MemberException exception = assertThrows(MemberException.class, () -> memberService.updateInfo(memberId, request));
 
-	    //then
+		//then
 		assertThat(exception.getErrorCode()).isEqualTo(MemberErrorCode.MEMBER_NOT_FOUND);
 
 	}
 
 	@DisplayName("회원정보 수정 성공 테스트")
 	@Test
-	void test_info_update_success(){
+	void test_info_update_success() {
 		//given
 		Long memberId = 1L;
 		InfoUpdateRequest request = infoUpdateRequest();

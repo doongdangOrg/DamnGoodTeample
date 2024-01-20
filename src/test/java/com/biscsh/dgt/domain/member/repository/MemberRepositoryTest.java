@@ -18,27 +18,27 @@ class MemberRepositoryTest {
 	@Autowired
 	private MemberRepository memberRepository;
 
-	private Member member(){
+	private Member member() {
 		return Member.builder()
-			.name("test")
-			.nickname("test")
-			.email("test@test.com")
-			.password("1234")
-			.phoneNumber("010-1234-5678")
-			.build();
+				.name("test")
+				.nickname("test")
+				.email("test@test.com")
+				.password("1234")
+				.phoneNumber("010-1234-5678")
+				.build();
 	}
 
-	private InfoUpdateRequest infoUpdateRequest(){
-		return new InfoUpdateRequest("updateName", "updateNickname","010-1234-1234");
+	private InfoUpdateRequest infoUpdateRequest() {
+		return new InfoUpdateRequest("updateName", "updateNickname", "010-1234-1234");
 	}
 
 	@DisplayName("회원 이메일 조회 테스트")
 	@Test
-	void test_find_by_email(){
-	    //given
+	void test_find_by_email() {
+		//given
 		Member member = member();
 
-	    //when
+		//when
 		memberRepository.save(member);
 		Optional<Member> saved = memberRepository.findByEmail(member.getEmail());
 
@@ -49,7 +49,7 @@ class MemberRepositoryTest {
 
 	@DisplayName("회원 닉네임 조회 테스트")
 	@Test
-	void test_find_by_nickname(){
+	void test_find_by_nickname() {
 		//given
 		Member member = member();
 
@@ -62,15 +62,14 @@ class MemberRepositoryTest {
 		assertThat(saved.get().getNickname()).isEqualTo(member.getNickname());
 	}
 
-
 	@DisplayName("회원 정보 수정 테스트")
 	@Test
-	void test_update_member(){
-	    //given
+	void test_update_member() {
+		//given
 		Member member = member();
 		InfoUpdateRequest infoUpdateRequest = infoUpdateRequest();
 
-	    //when
+		//when
 		Member saved = memberRepository.save(member);
 
 		saved.updateName(infoUpdateRequest.getName());
@@ -90,8 +89,8 @@ class MemberRepositoryTest {
 
 	@DisplayName("회원 id로 회원 삭제 테스트")
 	@Test
-	void test_delete_member_by_id(){
-	    //given
+	void test_delete_member_by_id() {
+		//given
 		Member member = member();
 
 		//when
