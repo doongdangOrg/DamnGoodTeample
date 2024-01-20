@@ -21,7 +21,7 @@ public class SignInInterceptor implements HandlerInterceptor {
 
 		HandlerMethod handlerMethod = (HandlerMethod)handler;
 		SignInRequired signInRequired = handlerMethod.getMethodAnnotation(SignInRequired.class);
-		System.out.println("ereeefojdpsaopjfpj");
+
 		if (signInRequired != null) {
 			HttpSession session = request.getSession();
 
