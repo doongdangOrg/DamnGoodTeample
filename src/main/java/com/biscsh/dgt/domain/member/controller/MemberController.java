@@ -2,8 +2,8 @@ package com.biscsh.dgt.domain.member.controller;
 
 import static org.springframework.http.HttpStatus.*;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -28,11 +28,10 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 
 	private final MemberService memberService;
-	private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 	@PostMapping("/signup")
 	public ResponseEntity<Boolean> signUp(@RequestBody SignUpRequest signUpRequest) {
-		signUpRequest.setPassword(encoder.encode(signUpRequest.getPassword()));
+		signUpRequest.setPassword(BCrypt.hashpw(signUpRequest.getPassword(), BCrypt.gensalt()));
 		Boolean signupSuccess = memberService.signUp(signUpRequest);
 
 		return ResponseEntity.status(CREATED)
@@ -41,6 +40,7 @@ public class MemberController {
 
 	@PostMapping("/signin")
 	public ResponseEntity<Boolean> signIn(HttpSession session, @RequestBody SignInRequest signInRequest) {
+		signInRequest.setPassword(BCrypt.hashpw(signInRequest.getPassword(), BCrypt.gensalt()));
 		Long signInMemberId = memberService.signIn(signInRequest);
 
 		session.setAttribute("signIn", signInMemberId);
