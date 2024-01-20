@@ -105,7 +105,7 @@ class MemberControllerTest {
 		result.andExpect(status().isAccepted());
 	}
 
-	@DisplayName("회원 정보 수정 실패 테스트 - 비 로그인 상태")
+	@DisplayName("회원 정보 수정 실패 테스트 - 미 로그인 상태")
 	@Test
 	void test_infoUpdate_fail_not_sign_in() throws Exception {
 		//given
@@ -139,7 +139,7 @@ class MemberControllerTest {
 		resultActions.andExpect(status().isCreated());
 	}
 
-	@DisplayName("회원 정보 조회 테스트")
+	@DisplayName("회원 정보 조회 성공 테스트")
 	@Test
 	void test_get_info_success() throws Exception {
 		//given
