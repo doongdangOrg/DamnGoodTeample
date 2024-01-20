@@ -78,8 +78,6 @@ public class MemberController {
 		return ResponseEntity.status(OK).body(member);
 	}
 
-
-
 	@DeleteMapping
 	public ResponseEntity<Void> delete(HttpSession session) {
 		Long signInMemberId = (Long)session.getAttribute("signIn");
@@ -89,14 +87,4 @@ public class MemberController {
 
 		return ResponseEntity.status(OK).build();
 	}
-
-	// private Long getSignInMemberId(HttpSession session) {
-	// 	Long memberId = (Long)session.getAttribute("signIn");
-	//
-	// 	if (memberId == null) {
-	// 		throw new MemberException(MemberErrorCode.NOT_SIGN_IN);
-	// 	}
-	//
-	// 	return memberId;
-	// }
 }
