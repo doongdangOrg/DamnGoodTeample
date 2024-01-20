@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Builder
@@ -13,14 +14,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SignUpRequest {
 	private String email;
+	@Setter
 	private String password;
 	private String nickname;
 	private String phoneNumber;
 	private String name;
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
 
 	public Member toEntity(){
 		return Member.builder()
