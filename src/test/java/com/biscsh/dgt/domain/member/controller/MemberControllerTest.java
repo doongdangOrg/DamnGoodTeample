@@ -208,4 +208,34 @@ class MemberControllerTest {
 		//then
 		resultActions.andExpect(status().isUnauthorized());
 	}
+
+	@DisplayName("회원탈퇴 성공 테스트")
+	@Test
+	void test_delete_success() throws Exception {
+		//given
+		mockitoSession.setAttribute("signIn", 1L);
+
+		//when
+		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+				.delete("/members")
+				.session(mockitoSession));
+
+		//then
+		resultActions.andExpect(status().isOk());
+	}
+
+	@DisplayName("회원탈퇴 실패 테스트 - 미 로그인 상태")
+	@Test
+	void test_delete_fail() throws Exception {
+		//given
+
+		//when
+		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+				.delete("/members")
+				.session(mockitoSession));
+
+		//then
+		resultActions.andExpect(status().isUnauthorized());
+	}
 }
+

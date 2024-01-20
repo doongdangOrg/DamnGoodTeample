@@ -188,4 +188,18 @@ class MemberServiceTest {
 		assertThat(updateMember.get().getNickname()).isEqualTo(request.getNickname());
 
 	}
+
+	@DisplayName("회원탈퇴 성공 테스트")
+	@Test
+	void test_delete_success() throws Exception {
+		//given
+		Long memberId = 1L;
+
+		//when
+		memberService.delete(memberId);
+
+		//then
+		verify(memberRepository, times(1)).deleteMemberById(memberId);
+	}
+
 }
