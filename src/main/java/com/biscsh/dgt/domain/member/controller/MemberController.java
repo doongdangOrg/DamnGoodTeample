@@ -78,6 +78,7 @@ public class MemberController {
 		return ResponseEntity.status(OK).body(member);
 	}
 
+	@SignInRequired
 	@DeleteMapping
 	public ResponseEntity<Void> delete(HttpSession session) {
 		Long signInMemberId = (Long)session.getAttribute("signIn");
