@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import com.biscsh.dgt.domain.member.domain.Member;
+import com.biscsh.dgt.domain.member.dto.InfoUpdateRequest;
 
 @DataJpaTest
 class MemberRepositoryTest {
@@ -17,53 +18,88 @@ class MemberRepositoryTest {
 	@Autowired
 	private MemberRepository memberRepository;
 
-	private Member member(){
-		return new Member.MemberBuilder()
-			.setName("test")
-			.setNickname("test")
-			.setEmail("test@test.com")
-			.setPassword("1234")
-			.setPhoneNumber("010-1234-2345")
-			.build();
+	private Member member() {
+		return Member.builder()
+				.name("test")
+				.nickname("test")
+				.email("test@test.com")
+				.password("1234")
+				.phoneNumber("010-1234-5678")
+				.build();
 	}
 
-	@DisplayName("회원 저장 성공 테스트")
-	@Test
-	void test_signup_success(){
-	    //given
-		Member member = member();
-
-		//when
-		Member saved = memberRepository.save(member());
-
-	    //then
-		assertThat(saved.getEmail()).isEqualTo(member.getEmail());
-	}
-	@DisplayName("회원 저장 실패 테스트 - 이메일 중복")
-	@Test
-	void test_signup_fail_by_email(){
-	    //given
-		memberRepository.save(member());
-
-	    //when
-		Member member = member();
-		Optional<Member> find = memberRepository.findByEmail(member.getEmail());
-
-		//then
-		assertThat(find.get().getEmail()).isEqualTo(member.getEmail());
+	private InfoUpdateRequest infoUpdateRequest() {
+		return new InfoUpdateRequest("updateName", "updateNickname", "010-1234-1234");
 	}
 
-	@DisplayName("회원 저장 실패 테스트 - 닉네임 중복")
+	@DisplayName("회원 이메일 조회 테스트")
 	@Test
-	void test_signup_fail_by_nickname(){
+	void test_find_by_email() {
 		//given
-		memberRepository.save(member());
+		Member member = member();
 
 		//when
-		Member member = member();
-		Optional<Member> find = memberRepository.findByNickname(member.getNickname());
+		memberRepository.save(member);
+		Optional<Member> saved = memberRepository.findByEmail(member.getEmail());
 
 		//then
-		assertThat(find.get().getNickname()).isEqualTo(member.getNickname());
+		assertThat(saved).isNotEmpty();
+		assertThat(saved.get().getEmail()).isEqualTo(member.getEmail());
+	}
+
+	@DisplayName("회원 닉네임 조회 테스트")
+	@Test
+	void test_find_by_nickname() {
+		//given
+		Member member = member();
+
+		//when
+		memberRepository.save(member);
+		Optional<Member> saved = memberRepository.findByNickname(member.getNickname());
+
+		//then
+		assertThat(saved).isNotEmpty();
+		assertThat(saved.get().getNickname()).isEqualTo(member.getNickname());
+	}
+
+	@DisplayName("회원 정보 수정 테스트")
+	@Test
+	void test_update_member() {
+		//given
+		Member member = member();
+		InfoUpdateRequest infoUpdateRequest = infoUpdateRequest();
+
+		//when
+		Member saved = memberRepository.save(member);
+
+		saved.updateName(infoUpdateRequest.getName());
+		saved.updateNickname(infoUpdateRequest.getNickname());
+		saved.updatePhoneNumber(infoUpdateRequest.getPhoneNumber());
+
+		memberRepository.save(saved);
+
+		Optional<Member> updated = memberRepository.findByEmail(saved.getEmail());
+
+		//then
+		assertThat(updated).isNotEmpty();
+		assertThat(updated.get().getName()).isEqualTo(infoUpdateRequest.getName());
+		assertThat(updated.get().getNickname()).isEqualTo(infoUpdateRequest.getNickname());
+		assertThat(updated.get().getPhoneNumber()).isEqualTo(infoUpdateRequest.getPhoneNumber());
+	}
+
+	@DisplayName("회원 탈퇴 테스트")
+	@Test
+	void test_delete_member_by_id() {
+		//given
+		Member member = member();
+
+		//when
+		Member saved = memberRepository.save(member);
+		memberRepository.deleteMemberById(saved.getId());
+
+		Optional<Member> deleted = memberRepository.findById(saved.getId());
+
+		//then
+		assertThat(deleted).isEmpty();
 	}
 }

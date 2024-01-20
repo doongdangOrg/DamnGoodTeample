@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -42,7 +43,9 @@ public class Member {
 	@NotNull
 	private String password;
 
-	private Member(Long id, String email, String phoneNumber, String nickname, String name, String password) {
+	//테스트 코드를 위한 생성자.
+	@Builder
+	public Member(Long id, String email, String phoneNumber, String nickname, String name, String password) {
 		this.id = id;
 		this.email = email;
 		this.phoneNumber = phoneNumber;
@@ -51,47 +54,24 @@ public class Member {
 		this.password = password;
 	}
 
-	public static class MemberBuilder {
-		private Long id;
-		private String email;
-		private String phoneNumber;
-		private String nickname;
-		private String name;
-		private String password;
-
-		public MemberBuilder setId(Long id) {
-			this.id = id;
-			return this;
-		}
-
-		public MemberBuilder setEmail(String email){
-			this.email = email;
-			return this;
-		}
-
-		public MemberBuilder setPhoneNumber(String phoneNumber) {
-			this.phoneNumber = phoneNumber;
-			return this;
-		}
-
-		public MemberBuilder setNickname(String nickname) {
-			this.nickname = nickname;
-			return this;
-		}
-
-		public MemberBuilder setName(String name) {
-			this.name = name;
-			return this;
-		}
-
-		public MemberBuilder setPassword(String password) {
-			this.password = password;
-			return this;
-		}
-
-		public Member build() {
-			return new Member(id, email, phoneNumber, nickname, name, password);
-		}
+	@Builder
+	private Member(String email, String phoneNumber, String nickname, String name, String password) {
+		this.email = email;
+		this.phoneNumber = phoneNumber;
+		this.nickname = nickname;
+		this.name = name;
+		this.password = password;
 	}
 
+	public void updatePhoneNumber(String phoneNumber){
+		this.phoneNumber = phoneNumber;
+	}
+
+	public void updateNickname(String nickname){
+		this.nickname = nickname;
+	}
+
+	public void updateName(String name){
+		this.name = name;
+	}
 }
