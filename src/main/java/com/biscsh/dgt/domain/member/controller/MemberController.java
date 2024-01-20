@@ -12,12 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.biscsh.dgt.config.signin.SignInRequired;
 import com.biscsh.dgt.domain.member.domain.Member;
 import com.biscsh.dgt.domain.member.dto.InfoUpdateRequest;
 import com.biscsh.dgt.domain.member.dto.SignInRequest;
 import com.biscsh.dgt.domain.member.dto.SignUpRequest;
-import com.biscsh.dgt.domain.member.exception.MemberErrorCode;
-import com.biscsh.dgt.domain.member.exception.MemberException;
 import com.biscsh.dgt.domain.member.service.MemberService;
 
 import jakarta.servlet.http.HttpSession;
@@ -50,53 +49,40 @@ public class MemberController {
 		return ResponseEntity.status(ACCEPTED).body(true);
 	}
 
+	@SignInRequired
 	@PostMapping("/signout")
 	public ResponseEntity<Object> signOut(HttpSession session) {
-		try {
-			Long signMemberId = getSignInMemberId(session);
-		} catch (Exception e) {
-			return ResponseEntity.status(UNAUTHORIZED).body(false);
-		}
+
 		session.invalidate();
 
 		return ResponseEntity.status(OK).build();
 	}
 
+	@SignInRequired
 	@PatchMapping("/info")
 	public ResponseEntity<Boolean> update(HttpSession session, @RequestBody InfoUpdateRequest infoUpdateRequest) {
+		Long signInMemberId = (Long)session.getAttribute("signIn");
 
-		//FIXME getSignInMemberId와 service계층에서 터질 수 있는 에러는 다르다.별도의 처리가 추후 필요함.
-		try {
-			Long signInMemberId = getSignInMemberId(session);
-			memberService.updateInfo(signInMemberId, infoUpdateRequest);
-		} catch (Exception e) {
-			return ResponseEntity.status(UNAUTHORIZED).body(false);
-		}
+		memberService.updateInfo(signInMemberId, infoUpdateRequest);
 
 		return ResponseEntity.status(CREATED).body(true);
 	}
 
+
+	@SignInRequired
 	@GetMapping("/info")
 	public ResponseEntity<Member> info(HttpSession session) {
-		Long signInMemberId = null;
-		Member member = null;
-
-		//FIXME getSignInMemberId와 service계층에서 터질 수 있는 에러는 다르다.별도의 처리가 추후 필요함.
-		try {
-			signInMemberId = getSignInMemberId(session);
-			member = memberService.getMember(signInMemberId);
-		} catch (Exception e) {
-			return ResponseEntity.status(UNAUTHORIZED).body(null);
-		}
+		Long signInMemberId = (Long)session.getAttribute("signIn");
+		Member member = memberService.getMember(signInMemberId);
 
 		return ResponseEntity.status(OK).body(member);
 	}
 
+
+
 	@DeleteMapping
 	public ResponseEntity<Void> delete(HttpSession session) {
-		Long signInMemberId = null;
-
-		signInMemberId = getSignInMemberId(session);
+		Long signInMemberId = (Long)session.getAttribute("signIn");
 
 		session.invalidate();
 		memberService.delete(signInMemberId);
@@ -104,13 +90,13 @@ public class MemberController {
 		return ResponseEntity.status(OK).build();
 	}
 
-	private Long getSignInMemberId(HttpSession session) {
-		Long memberId = (Long)session.getAttribute("signIn");
-
-		if (memberId == null) {
-			throw new MemberException(MemberErrorCode.NOT_SIGN_IN);
-		}
-
-		return memberId;
-	}
+	// private Long getSignInMemberId(HttpSession session) {
+	// 	Long memberId = (Long)session.getAttribute("signIn");
+	//
+	// 	if (memberId == null) {
+	// 		throw new MemberException(MemberErrorCode.NOT_SIGN_IN);
+	// 	}
+	//
+	// 	return memberId;
+	// }
 }
