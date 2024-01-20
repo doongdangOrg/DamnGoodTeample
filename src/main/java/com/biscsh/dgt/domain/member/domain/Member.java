@@ -43,6 +43,17 @@ public class Member {
 	@NotNull
 	private String password;
 
+	//테스트 코드를 위한 생성자.
+	@Builder
+	public Member(Long id, String email, String phoneNumber, String nickname, String name, String password) {
+		this.id = id;
+		this.email = email;
+		this.phoneNumber = phoneNumber;
+		this.nickname = nickname;
+		this.name = name;
+		this.password = password;
+	}
+
 	@Builder
 	private Member(String email, String phoneNumber, String nickname, String name, String password) {
 		this.email = email;
