@@ -68,7 +68,6 @@ public class MemberController {
 		return ResponseEntity.status(CREATED).body(true);
 	}
 
-
 	@SignInRequired
 	@GetMapping("/info")
 	public ResponseEntity<Member> info(HttpSession session) {
